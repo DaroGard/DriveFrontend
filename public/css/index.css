@@ -1,0 +1,48 @@
+body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    font-size: x-large;
+}
+
+header {
+    width: 100%;
+    height: 8%;
+    margin: -7px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+}
+
+.container2 {
+    display: flex;
+    align-items: center;
+}
+
+#logoBox {
+    margin-left: 2%;
+    margin-top: 1.5%;
+}
+
+#logo {
+    width: 60%;
+}
+
+#descripcionBox {
+    margin-right: 1%;
+    width: 35%;
+    margin-top: 1.5%;
+}
+
+a {
+    text-decoration: none;
+}
+
+#logIn {
+    margin-top: 0.5%;
+}
+

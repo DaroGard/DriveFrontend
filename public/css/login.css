@@ -1,0 +1,56 @@
+body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    font-size: x-large;
+    background-color: rgb(184, 189, 190)!important;
+}
+
+.container{
+    max-width: 1000px!important;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+section {
+    background-color: white;
+    width: 100%;
+    height: 50%;
+    border-radius: 30px;
+}
+
+.container2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#signin {
+    width: 100%;
+}
+
+.form-control{
+    width: 95%!important;
+}
+
+.form-text {
+    width: 95%!important;
+}
+
+#botones {
+    margin-top: 5%;
+}
+
+button {
+    width: 35%;
+    margin-left: 5%!important;
+    border-radius: 20px!important;
+    background-color: rgb(1, 99, 245);
+    color: white;
+}
+
+a {
+    text-decoration: none!important;
+}
