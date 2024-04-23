@@ -25,8 +25,10 @@
         </div class="container">
         <hr>
     </header>
-        <section id="landing">
-            <img src="{{asset('img/landing.png')}}" alt="landing.png" style="margin-top: 1.5%">
+        <section>
+            <div>
+            <img src="{{asset('img/landing.png')}}" alt="landing.png" style="width: 90%; margin: 5%">
+            </div>
         </section>
 </body>
 </html>

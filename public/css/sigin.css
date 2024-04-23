@@ -25,10 +25,11 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 65%;
 }
 
 #signin {
-    width: 77%;
+    width: 75%;
     margin: 3%;
 }
 
@@ -54,4 +55,8 @@ button {
 
 a {
     text-decoration: none!important;
+}
+
+#cajaPrincipal {
+    width: 45%;
 }

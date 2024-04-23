@@ -20,3 +20,11 @@ Route::get('/', function () {
 Route::get('/inicioSesion', function () {
     return view('login');
 });
+
+Route::get('/crearCuenta', function(){
+    return view('sigin');
+});
+
+Route::get('/home', function(){
+    return view('main');
+});
