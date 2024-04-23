@@ -1,18 +1,124 @@
 body {
     background-color: #F8FAFD;
     height: 100vh;
+    overflow: hidden;
+}
+
+.fa-solid, .fas {
+    font-weight: 900;
+    font-size: x-large;
 }
 
 #seccionUno{
+    display: flex;
     background-color: #F8FAFD;
-    width: 20%;
+    width: 15%;
     height: 100%;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#logo{
+    color: var(--dt-on-surface-variant, #5f6368);
+    margin: 4%;
+    margin-left: 10%;
+    font-size: x-large;
+    font-weight: 500;
+}
+
+.brbsPe {
+    margin: 6%;
+    width: 53%;
+    -webkit-box-align: center;
+    align-items: center;
+    background-color: var(--dt-surface-bright, #fff);
+    border-radius: var(--dt-corner-fab, 1.25rem);
+    border-width: 0;
+    box-shadow: var(--dt-shadow-elevation-1, 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15));
+    box-sizing: border-box;
+    color: var(--dt-on-surface, rgb(60, 64, 67));
+    display: inline-flex;
+    fill: var(--dt-on-surface, rgb(60, 64, 67));
+    gap: -0.25rem;
+    grid-template-columns: auto 1fr;
+    height: 3.5rem;
+    min-width: 6.25rem;
+    padding: 1.125rem 1.25rem 1.125rem 1rem;
+    place-content: center start;
+    transition: box-shadow .08s linear;
+    margin-left: 14%;
+}
+
+#navMenu{
+    margin-top: 8%;
+}
+
+.list-group {
+    --bs-list-group-color: var(--bs-body-color);
+    --bs-list-group-bg: var(--bs-body-bg);
+    --bs-list-group-border-color: var(--bs-border-color);
+    --bs-list-group-border-width: var(--bs-border-width);
+    --bs-list-group-border-radius: var(--bs-border-radius);
+    --bs-list-group-item-padding-x: 1rem;
+    --bs-list-group-item-padding-y: 0.5rem;
+    --bs-list-group-action-color: var(--bs-secondary-color);
+    --bs-list-group-action-hover-color: var(--bs-emphasis-color);
+    --bs-list-group-action-hover-bg: var(--bs-tertiary-bg);
+    --bs-list-group-action-active-color: var(--bs-body-color);
+    --bs-list-group-action-active-bg: var(--bs-secondary-bg);
+    --bs-list-group-disabled-color: var(--bs-secondary-color);
+    --bs-list-group-disabled-bg: var(--bs-body-bg);
+    --bs-list-group-active-color: #fff;
+    --bs-list-group-active-bg: #636b776e!important;
+    --bs-list-group-active-border-color: none!important;
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    border-radius: var(--bs-list-group-border-radius);
+    width: 86%;
+    margin: 5%;
+}
+
+.list-group-item.active {
+    margin-bottom: 4%;
+    border-radius: 0%;
+}
+
+.list-group-item+.list-group-item {
+    border-top-width: 0;
+    margin-bottom: 4%;
+    border-radius: 0%;
+}
+
+#almacenamiento {
+    margin: 9%;
+    margin-top: 14%;
+}
+
+.progress, .progress-stacked {
+    width: 85%;
 }
 
 #seccionDos{
     background-color: #F8FAFD;
-    width: 80%;
+    width: 85%;
     height: 100%;
+}
+
+#usuario {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 98%;
+    height: 12%;
+}
+
+#imagen {
+    background: black;
+    width: 6%;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
 #cajaPrincipal{
@@ -21,10 +127,68 @@ body {
     height: 100%;
 }
 
-#cajaMedia{
+#cajaMedia {
     background-color: rgb(255, 255, 255);
     width: 99%;
-    height: 89%;
-    margin-top: 7%;
+    height: 85%;
     border-radius: 24px;
+}
+
+.col-md-8 {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 1%;
+}
+
+.h2, h2 {
+    font-size: 2rem;
+    text-align: center;
+}
+
+#categoria {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    margin: 1%;
+}
+
+.btn-secondary {
+    color: #272727!important;
+    --bs-btn-bg: #6c757d00!important;
+}
+
+#sugerido{
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #393939;
+    margin: 1%
+}
+
+.btn-outline-primary {
+    color: #272727!important;
+    --bs-btn-color: #0d6dfd00!important;
+    --bs-btn-border-color: #1f1f1f!important;
+    --bs-btn-hover-color: #000000!important;
+    --bs-btn-active-bg: #298ce794!important;
+    --bs-btn-active-border-color: #1f1f1f!important;
+}
+
+.btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn.dropdown-toggle-split:first-child, .btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
+    margin-left: 3%;
+}
+
+#archivosNav{
+    overflow-y: scroll;
+    width: 100%;
+    height: 78%;
+}
+
+.dropdown, .dropdown-center, .dropend, .dropstart, .dropup, .dropup-center {
+    margin-right: 1%;
+}
+
+.mt-4 {
+    width: 147%!important;
 }

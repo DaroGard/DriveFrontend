@@ -22,7 +22,7 @@ Route::get('/inicioSesion', function () {
 });
 
 Route::get('/crearCuenta', function(){
-    return view('sigin');
+    return view('signin');
 });
 
 Route::get('/home', function(){
