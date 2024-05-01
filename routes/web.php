@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MainController;
+use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,14 +20,16 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/inicioSesion', function () {
-    return view('login');
-});
+Route::get('/inicioSesion', [LoginController::class, 'inicioSesion'])->name('inicio_sesion');;
 
 Route::get('/crearCuenta', function(){
     return view('signin');
 });
 
-Route::get('/home', function(){
-    return view('main');
-});
+Route::post('/verificar', [LoginController::class, 'verificarUsuario'])->name('verificar_usuario');
+
+Route::get('/main', [MainController::class, 'main'])->name('main-page');
+
+Route::post('/crear-usuario', [SignController::class, 'createUser']);
+
+Route::post('/guardar-archivo', [MainController::class, 'guardarArchivo'])->name('guardar-archivo');
