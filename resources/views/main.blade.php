@@ -62,13 +62,14 @@
                 </header>
                 <div id="categoria">
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        <button id="tipoArchivoDropdown" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Tipo
                         </button>
                         <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" onclick="filtrarPorTipo(null)" type="button">Todos</button></li>
                             @foreach ($tiposArchivos as $tipoArchivo)
-                                <li><button class="dropdown-item"
+                                <li><button class="dropdown-item" onclick="filtrarPorTipo('{{ $tipoArchivo->idTipoArchivo }}')"
                                         type="button" value="{{ $tipoArchivo->idTipoArchivo }}">{{ $tipoArchivo->tipoArchivo }}</button></li>
                             @endforeach
                         </ul>
@@ -112,7 +113,7 @@
                 <div id="archivosNav">
                     <div class="col-md-8">
                         <div class="table-container">
-                            <table id="tablaProductos" class="table table-striped table-hover mt-4">
+                            <table id="tablaArchivos" class="table table-striped table-hover mt-4">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th style="display: none">#Categoria</th>
@@ -124,18 +125,44 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    @foreach ($archivos as $archivo)
+                                    <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
                                         <td style="display: none"></td>
-                                        <td><i class="fa-solid fa-file" style="margin-right: 4%"></i> Archivo1</td>
-                                        <td>Subido 23 Abr 2024</td>
+                                        @if ($archivo->tipoArchivo->idTipoArchivo == 1)
+                                        <td><i class="fa-solid fa-file-pdf" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
+                                        @else
+                                        @if ($archivo->tipoArchivo->idTipoArchivo == 2 || $archivo->tipoArchivo->idTipoArchivo == 4)
+                                        <td><i class="fa-solid fa-file-image" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
+                                        @else
+                                        @if ($archivo->tipoArchivo->idTipoArchivo == 3)
+                                        <td><i class="fa-solid fa-file-word" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
+                                        @else
+                                        @if ($archivo->tipoArchivo->idTipoArchivo == 5)
+                                        <td><i class="fa-solid fa-file-file" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
+                                        @else
+                                        @if ($archivo->tipoArchivo->idTipoArchivo == 6)
+                                        <td><i class="fa-solid fa-file-audio" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
+                                        @else
+                                        @if ($archivo->tipoArchivo->idTipoArchivo == 7)
+                                        <td><i class="fa-solid fa-file-video" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
+                                        @else
+                                        <td><i class="fa-solid fa-file-lines" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
+                                        @endif
+                                        @endif
+                                        @endif
+                                        @endif
+                                        @endif
+                                        @endif
+                                        <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}</td>
                                         <td><i class="fa-solid fa-user" style="margin-right: 4%"></i> yo</td>
-                                        <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i> Carpeta1
+                                        <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i> {{$archivo->carpeta}}
                                         </td>
                                         <th><i class="fa-solid fa-user-plus"> <i
                                                     class="fa-solid fa-pen-to-square"></i> <i
                                                     class="fa-regular fa-star"></i> <i
                                                     class="fa-solid fa-trash"></i></i></th>
                                     </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -189,6 +216,8 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ url('js/main.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
