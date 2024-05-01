@@ -33,3 +33,7 @@ Route::get('/main', [MainController::class, 'main'])->name('main-page');
 Route::post('/crear-usuario', [SignController::class, 'createUser']);
 
 Route::post('/guardar-archivo', [MainController::class, 'guardarArchivo'])->name('guardar-archivo');
+
+Route::put('/usuario/actualizar', [MainController::class, 'actualizarUsuario'])->name('actualizar-usuario');
+
+Route::put('/archivos/actualizar/', [MainController::class, 'actualizarArchivo'])->name('archivos-actualizar');

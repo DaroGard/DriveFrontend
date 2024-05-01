@@ -53,7 +53,17 @@
         <section id="seccionDos">
             <div id="usuario">
                 <div style="margin-right: 1.5%;"><i class="fa-solid fa-gear"></i></div>
-                <div id="imagen"><img src="{{ asset('img/default-picture.png') }}" style="width: 100%;"></div>
+                @if (Session::get('cuentaAct')['imagen'] != null)
+                    <div id="imagen" data-bs-toggle="modal" data-bs-target="#usuarioModal"
+                        data-bs-whatever="@usuarioModal">
+                        <img src="{{ asset(Session::get('cuentaAct')['imagen']) }}"
+                            style="width:100%; height: auto; object-fit: cover;">
+                    </div>
+                @else
+                    <div id="imagen" data-bs-toggle="modal" data-bs-target="#usuarioModal"
+                        data-bs-whatever="@usuarioModal"><img src="{{ asset('img/default-picture.png') }}"
+                            style="width:100%; height: auto; object-fit: cover;"></div>
+                @endif
             </div>
             <div id="cajaMedia">
                 <br>
@@ -62,15 +72,18 @@
                 </header>
                 <div id="categoria">
                     <div class="dropdown">
-                        <button id="tipoArchivoDropdown" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <button id="tipoArchivoDropdown" class="btn btn-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Tipo
                         </button>
                         <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" onclick="filtrarPorTipo(null)" type="button">Todos</button></li>
+                            <li><button class="dropdown-item" onclick="filtrarPorTipo(null)"
+                                    type="button">Todos</button></li>
                             @foreach ($tiposArchivos as $tipoArchivo)
-                                <li><button class="dropdown-item" onclick="filtrarPorTipo('{{ $tipoArchivo->idTipoArchivo }}')"
-                                        type="button" value="{{ $tipoArchivo->idTipoArchivo }}">{{ $tipoArchivo->tipoArchivo }}</button></li>
+                                <li><button class="dropdown-item"
+                                        onclick="filtrarPorTipo('{{ $tipoArchivo->idTipoArchivo }}')" type="button"
+                                        value="{{ $tipoArchivo->idTipoArchivo }}">{{ $tipoArchivo->tipoArchivo }}</button>
+                                </li>
                             @endforeach
                         </ul>
                     </div>
@@ -82,7 +95,8 @@
                         <ul class="dropdown-menu">
                             @foreach ($usuarios as $usuario)
                                 @if (Session::get('cuentaAct')['idUsuario'] != $usuario->idUsuario)
-                                    <li><button class="dropdown-item" type="button" value="{{ $usuario->idUsuario }}">{{ $usuario->nombre }}</button>
+                                    <li><button class="dropdown-item" type="button"
+                                            value="{{ $usuario->idUsuario }}">{{ $usuario->nombre }}</button>
                                     </li>
                                 @endif
                             @endforeach
@@ -126,42 +140,68 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($archivos as $archivo)
-                                    <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
-                                        <td style="display: none"></td>
-                                        @if ($archivo->tipoArchivo->idTipoArchivo == 1)
-                                        <td><i class="fa-solid fa-file-pdf" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
-                                        @else
-                                        @if ($archivo->tipoArchivo->idTipoArchivo == 2 || $archivo->tipoArchivo->idTipoArchivo == 4)
-                                        <td><i class="fa-solid fa-file-image" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
-                                        @else
-                                        @if ($archivo->tipoArchivo->idTipoArchivo == 3)
-                                        <td><i class="fa-solid fa-file-word" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
-                                        @else
-                                        @if ($archivo->tipoArchivo->idTipoArchivo == 5)
-                                        <td><i class="fa-solid fa-file-file" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
-                                        @else
-                                        @if ($archivo->tipoArchivo->idTipoArchivo == 6)
-                                        <td><i class="fa-solid fa-file-audio" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
-                                        @else
-                                        @if ($archivo->tipoArchivo->idTipoArchivo == 7)
-                                        <td><i class="fa-solid fa-file-video" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
-                                        @else
-                                        <td><i class="fa-solid fa-file-lines" style="margin-right: 4%"></i>{{$archivo->nombre}}</td>
-                                        @endif
-                                        @endif
-                                        @endif
-                                        @endif
-                                        @endif
-                                        @endif
-                                        <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}</td>
-                                        <td><i class="fa-solid fa-user" style="margin-right: 4%"></i> yo</td>
-                                        <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i> {{$archivo->carpeta}}
-                                        </td>
-                                        <th><i class="fa-solid fa-user-plus"> <i
-                                                    class="fa-solid fa-pen-to-square"></i> <i
-                                                    class="fa-regular fa-star"></i> <i
-                                                    class="fa-solid fa-trash"></i></i></th>
-                                    </tr>
+                                        <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
+                                            <td style="display: none"></td>
+                                            @if ($archivo->tipoArchivo->idTipoArchivo == 1)
+                                                <td><i class="fa-solid fa-file-pdf"
+                                                        style="margin-right: 4%"></i>{{ $archivo->nombre }}</td>
+                                            @else
+                                                @if ($archivo->tipoArchivo->idTipoArchivo == 2 || $archivo->tipoArchivo->idTipoArchivo == 4)
+                                                    <td><i class="fa-solid fa-file-image"
+                                                            style="margin-right: 4%"></i>{{ $archivo->nombre }}</td>
+                                                @else
+                                                    @if ($archivo->tipoArchivo->idTipoArchivo == 3)
+                                                        <td><i class="fa-solid fa-file-word"
+                                                                style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                        </td>
+                                                    @else
+                                                        @if ($archivo->tipoArchivo->idTipoArchivo == 5)
+                                                            <td><i class="fa-solid fa-file-file"
+                                                                    style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                            </td>
+                                                        @else
+                                                            @if ($archivo->tipoArchivo->idTipoArchivo == 6)
+                                                                <td><i class="fa-solid fa-file-audio"
+                                                                        style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                </td>
+                                                            @else
+                                                                @if ($archivo->tipoArchivo->idTipoArchivo == 7)
+                                                                    <td><i class="fa-solid fa-file-video"
+                                                                            style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                    </td>
+                                                                @else
+                                                                    <td><i class="fa-solid fa-file-lines"
+                                                                            style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                    </td>
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                            @endif
+                                            <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}</td>
+                                            <td><i class="fa-solid fa-user" style="margin-right: 4%"></i> {{ $archivo->usuario->nombre }}</td>
+                                            <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i>
+                                                {{ $archivo->carpeta }}
+                                            </td>
+                                            <th><i class="fa-solid fa-user-plus"></i> <i  data-bs-toggle="modal" data-bs-target="#editarArchivo"
+                                                data-bs-whatever="@editarArchivo"
+                                                data-idEdit="{{ $archivo->idArchivo }}"
+                                                data-nombreEdit="{{ $archivo->nombre }}"
+                                                data-descripcionEdit="{{ $archivo->descripcion }}"
+                                                data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                data-usuarioEdit="yo" data-carpeta="{{ $archivo->carpeta }}"
+                                                        class="fa-solid fa-pen-to-square"></i> <i
+                                                        data-bs-toggle="modal" data-bs-target="#favorito"
+                                                        data-bs-whatever="@favorito"
+                                                        data-nombre="{{ $archivo->nombre }}"
+                                                        data-tipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-fecha="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                        data-usuario="{{ $archivo->usuario->nombre }}" data-carpeta="{{ $archivo->carpeta }}"
+                                                        class="fa-regular fa-star"></i> <i
+                                                        class="fa-solid fa-trash"></i></th>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -171,7 +211,7 @@
             </div>
         </section>
     </div>
-
+    <!--Modal guardar archivos-->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -185,7 +225,8 @@
                         @csrf
                         <div class="mb-3" style="display: none">
                             <label for="recipient-id" class="col-form-label">ID Usuario:</label>
-                            <input type="text" class="form-control" id="recipient-id" name="idUsuario" value="{{ Session::get('cuentaAct')['idUsuario'] }}">
+                            <input type="text" class="form-control" id="recipient-id" name="idUsuario"
+                                value="{{ Session::get('cuentaAct')['idUsuario'] }}">
                         </div>
                         <div class="mb-3">
                             <label for="recipient-name" class="col-form-label">Nombre:</label>
@@ -193,7 +234,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="recipient-descripcion" class="col-form-label">Descripción:</label>
-                            <input type="text" class="form-control" id="recipient-descripcion" name="descripcion">
+                            <input type="text" class="form-control" id="recipient-descripcion"
+                                name="descripcion">
                         </div>
                         <div class="mb-3">
                             <label for="recipient-tamanio" class="col-form-label">Tamaño:</label>
@@ -203,7 +245,8 @@
                             <label for="tipoarchivo">Tipo de Archivo:</label>
                             <select class="form-control" id="tipoarchivo" name="tipoarchivo" required>
                                 @foreach ($tiposArchivos as $tipoArchivo)
-                                    <option value="{{ $tipoArchivo->idTipoArchivo }}">{{ $tipoArchivo->tipoArchivo }}</option>
+                                    <option value="{{ $tipoArchivo->idTipoArchivo }}">{{ $tipoArchivo->tipoArchivo }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -216,6 +259,178 @@
             </div>
         </div>
     </div>
+    <!--Modal actualizar usuario-->
+    <div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="usuarioModalLabel">{{ Session::get('cuentaAct')['nombre'] }}
+                        {{ Session::get('cuentaAct')['apellido'] }}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('actualizar-usuario') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label for="usuarioNombre" class="col-form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="usuarioNombre"
+                                value="{{ Session::get('cuentaAct')['nombre'] }}"
+                                placeholder="{{ Session::get('cuentaAct')['nombre'] }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuarioApellido" class="col-form-label">Apellido:</label>
+                            <input type="text" class="form-control" id="usuarioApellido"
+                                value="{{ Session::get('cuentaAct')['apellido'] }}"
+                                placeholder="{{ Session::get('cuentaAct')['apellido'] }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuarioContrasena" class="col-form-label">Contraseña:</label>
+                            <input type="password" class="form-control" id="usuarioContrasena"
+                                name="usuarioContrasena" placeholder="Ingresar nueva contraseña...">
+                        </div>
+                        <div class="mb-3">
+                            <label for="genero">Genero:</label>
+                            <select class="form-control" id="genero" name="genero" required>
+                                <option value="{{ Session::get('cuentaAct')['genero']['idGenero'] }}">Seleccionar
+                                </option>
+                                @foreach ($generos as $genero)
+                                    <option value="{{ $genero->idGenero }}">{{ $genero->tipoGenero }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lugar">Lugar:</label>
+                            <select class="form-control" id="lugar" name="lugar" required>
+                                <option value="{{ Session::get('cuentaAct')['lugar']['idLugar'] }}">Seleccionar
+                                </option>
+                                @foreach ($lugares as $lugar)
+                                    <option value="{{ $lugar->idLugar }}">{{ $lugar->nombreLugar }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="preferencia">Preferencia:</label>
+                            <select class="form-control" id="preferencia" name="preferencia" required>
+                                <option value="{{ Session::get('cuentaAct')['preferencia']['idPreferencia'] }}">
+                                    Seleccionar</option>
+                                @foreach ($preferencias as $preferencia)
+                                    <option value="{{ $preferencia->idPreferencia }}">{{ $preferencia->preferencia }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuarioTelefono" class="col-form-label">Telefono:</label>
+                            <input type="text" class="form-control" id="usuarioTelefono" name="usuarioTelefono"
+                                placeholder="{{ Session::get('cuentaAct')['telefono'] }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuarioImg" class="col-form-label">Foto:</label>
+                            <input type="text" class="form-control" id="usuarioImg" name="usuarioImg"
+                                placeholder="img/nombre.extension">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--Modal editor archivo-->
+    <div class="modal fade" id="editarArchivo" tabindex="-1" aria-labelledby="editarArchivoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editarArchivoLabel">Detalles del Archivo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('archivos-actualizar') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3" style="display: none">
+                            <label for="archivoEditId" class="col-form-label">ID:</label>
+                            <input type="text" class="form-control" id="archivoEditId" name="archivoEditId" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoEditNombre" class="col-form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="archivoEditNombre" name="archivoEditNombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoEditDescripcion" class="col-form-label">Descripcion:</label>
+                            <input type="text" class="form-control" id="archivoEditDescripcion" name="archivoEditDescripcion">
+                        </div>
+                        <div class="mb-3" style="display: none">
+                            <label for="archivoEditTipo" class="col-form-label">Tipo:</label>
+                            <input type="text" class="form-control" id="archivoEditTipo" name="archivoEditTipo" readonly>
+                        </div>
+                        <div class="mb-3" style="display: none">
+                            <label for="archivoEditFecha" class="col-form-label">Fecha de Creación:</label>
+                            <input type="text" class="form-control" id="archivoEditFecha" name="archivoEditFecha" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoEditCarpeta" class="col-form-label">Carpeta:</label>
+                            <input type="text" class="form-control" id="archivoEditCarpeta" name="archivoEditCarpeta" readonly>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Editar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal Favoritos-->
+    <div class="modal fade" id="favorito" tabindex="-1" aria-labelledby="favoritoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="favoritoLabel">Detalles del Archivo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="archivoFavNombre" class="col-form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="archivoFavNombre" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoFavTipo" class="col-form-label">Tipo:</label>
+                            <input type="text" class="form-control" id="archivoFavTipo" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoFavFecha" class="col-form-label">Fecha de Creación:</label>
+                            <input type="text" class="form-control" id="archivoFavFecha" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoFavUsuario" class="col-form-label">Usuario:</label>
+                            <input type="text" class="form-control" id="archivoFavUsuario" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoFavCarpeta" class="col-form-label">Carpeta:</label>
+                            <input type="text" class="form-control" id="archivoFavCarpeta" readonly>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Añadir a Favoritos</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <script src="{{ url('js/main.js') }}"></script>
 
