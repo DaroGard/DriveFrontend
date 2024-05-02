@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
 </head>
-
 <body>
     <div id="cajaPrincipal">
         <section id="seccionUno">
@@ -22,12 +20,18 @@
                     alt="logo.png" style="width: 40px; height: 40px; margin-right: 2%">Drive</div>
             <button type="button" role="button" tabindex="0" class="brbsPe Ss7qXc a-qb-d" aria-disabled="false"
                 aria-expanded="false" aria-haspopup="true" guidedhelpid="new_menu_button" style="user-select: none;"
-                data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap"><i
-                    role="presentation" class="cUCuw   upeNge KuOzJf QmyJdb vA3Shd" ssk="6:aP5GMe"></i><i
-                    role="presentation" class="WNpj6b i1jHKe" ssk="6:jC5xjb"></i><span><span class="a-ec-Gd-zc-c"><svg
-                            class="Q6yead QJZfhe " width="24" height="24" viewBox="0 0 24 24" focusable="false">
+                data-bs-toggle="modal" data-bs-target="#modalArchivo" data-bs-whatever="@getbootstrap">
+                <i role="presentation" class="cUCuw   upeNge KuOzJf QmyJdb vA3Shd" ssk="6:aP5GMe"></i>
+                <i role="presentation" class="WNpj6b i1jHKe" ssk="6:jC5xjb"></i>
+                <span>
+                    <span class="a-ec-Gd-zc-c">
+                        <svg class="Q6yead QJZfhe " width="24" height="24" viewBox="0 0 24 24" focusable="false">
                             <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
-                        </svg></span></span><span class="jYPt8c">Nuevo</span></button>
+                        </svg>
+                    </span>
+                </span>
+                <span class="jYPt8c">Nuevo</span>
+            </button>
             <div id="navMenu">
                 <div class="list-group">
                     <button type="button" class="list-group-item list-group-item-action active" aria-current="true"><i
@@ -52,8 +56,12 @@
         </section>
         <section id="seccionDos">
             <div id="usuario">
-                <div style="margin-right: 1.5%;" data-bs-toggle="modal" data-bs-target="#usuarioModal"
-                    data-bs-whatever="@usuarioModal"><i class="fa-solid fa-gear"></i></div>
+                <div class="d-inline" style="margin-right: 1.5%;">
+                    <div data-bs-toggle="modal" data-bs-target="#usuarioModal" data-bs-whatever="@usuarioModal"
+                        role="button" class="cursor-pointer">
+                        <i class="fas fa-cog"></i> <!-- Utilizando las clases de Font Awesome 5 -->
+                    </div>
+                </div>
                 @if (Session::get('cuentaAct')['imagen'] != null)
                     <div id="imagen">
                         <img src="{{ asset(Session::get('cuentaAct')['imagen']) }}"
@@ -139,8 +147,8 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($archivos as $archivo)
-                                    <tr data-idArchivo="{{ $archivo->idArchivo }}">
-                                        <td style="display: none"></td>
+                                        <tr data-idArchivo="{{ $archivo->idArchivo }}">
+                                            <td style="display: none"></td>
                                         <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
                                             <td style="display: none"></td>
                                             @if ($archivo->tipoArchivo->idTipoArchivo == 1)
@@ -221,11 +229,12 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($carpetas as $carpeta)
-                                    <tr class="fila-carpeta" data-tipo="{{ $carpeta->idCarpeta }}">
-                                        <td style="display: none"></td>
-                                        <td>
-                                            <i class="fa-solid fa-folder" style="margin-right: 4%" onclick="filtrarPorCarpeta('{{ $carpeta->idCarpeta }}')"></i>{{ $carpeta->nombreCarpeta }}
-                                        </td>
+                                        <tr class="fila-carpeta" data-tipo="{{ $carpeta->idCarpeta }}">
+                                            <td style="display: none"></td>
+                                            <td>
+                                                <i class="fa-solid fa-folder" style="margin-right: 4%"
+                                                    onclick="filtrarPorCarpeta('{{ $carpeta->idCarpeta }}')"></i>{{ $carpeta->nombreCarpeta }}
+                                            </td>
                                             <td>{{ $carpeta->estadoCarpeta->estado }}</td>
                                             <td><i class="fa-solid fa-user"
                                                     style="margin-right: 4%"></i>{{ Session::get('cuentaAct')['nombre'] }}
@@ -261,38 +270,38 @@
     </section>
     </div>
     <!--Modal guardar archivos-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="modalArchivo" tabindex="-1" aria-labelledby="modalArchivoLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Archivo</h1>
+                    <h5 class="modal-title" id="modalArchivoLabel">Agregar Archivo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formulario-archivo" action="{{ route('guardar-archivo') }}" method="POST">
                         @csrf
-                        <div class="mb-3" style="display: none">
-                            <label for="recipient-id" class="col-form-label">ID Usuario:</label>
+                        <div class="mb-3" style="display: none;">
+                            <label for="recipient-id" class="form-label">ID Usuario:</label>
                             <input type="text" class="form-control" id="recipient-id" name="idUsuario"
                                 value="{{ Session::get('cuentaAct')['idUsuario'] }}">
                         </div>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Nombre:</label>
+                            <label for="recipient-name" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="recipient-name" name="nombre">
                         </div>
                         <div class="mb-3">
-                            <label for="recipient-descripcion" class="col-form-label">Descripción:</label>
+                            <label for="recipient-descripcion" class="form-label">Descripción:</label>
                             <input type="text" class="form-control" id="recipient-descripcion"
                                 name="descripcion">
                         </div>
                         <div class="mb-3">
-                            <label for="recipient-tamanio" class="col-form-label">Tamaño:</label>
+                            <label for="recipient-tamanio" class="form-label">Tamaño:</label>
                             <input type="text" class="form-control" id="recipient-tamanio" name="tamano">
                         </div>
-                        <div class="form-group">
-                            <label for="tipoarchivo">Tipo de Archivo:</label>
-                            <select class="form-control" id="tipoarchivo" name="tipoarchivo" required>
+                        <div class="mb-3">
+                            <label for="tipoarchivo" class="form-label">Tipo de Archivo:</label>
+                            <select class="form-select" id="tipoarchivo" name="tipoarchivo" required>
                                 @foreach ($tiposArchivos as $tipoArchivo)
                                     <option value="{{ $tipoArchivo->idTipoArchivo }}">{{ $tipoArchivo->tipoArchivo }}
                                     </option>
@@ -311,7 +320,7 @@
     <!--Modal actualizar usuario-->
     <div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="usuarioModalLabel">{{ Session::get('cuentaAct')['nombre'] }}
@@ -340,13 +349,12 @@
                                 name="usuarioContrasena" placeholder="Ingresar nueva contraseña...">
                         </div>
                         <div class="mb-3">
-                            <label for="genero">Genero:</label>
+                            <label for="genero">Género:</label>
                             <select class="form-control" id="genero" name="genero" required>
                                 <option value="{{ Session::get('cuentaAct')['genero']['idGenero'] }}">Seleccionar
                                 </option>
                                 @foreach ($generos as $genero)
-                                    <option value="{{ $genero->idGenero }}">{{ $genero->tipoGenero }}
-                                    </option>
+                                    <option value="{{ $genero->idGenero }}">{{ $genero->tipoGenero }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -356,8 +364,7 @@
                                 <option value="{{ Session::get('cuentaAct')['lugar']['idLugar'] }}">Seleccionar
                                 </option>
                                 @foreach ($lugares as $lugar)
-                                    <option value="{{ $lugar->idLugar }}">{{ $lugar->nombreLugar }}
-                                    </option>
+                                    <option value="{{ $lugar->idLugar }}">{{ $lugar->nombreLugar }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -373,7 +380,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="usuarioTelefono" class="col-form-label">Telefono:</label>
+                            <label for="usuarioTelefono" class="col-form-label">Teléfono:</label>
                             <input type="text" class="form-control" id="usuarioTelefono" name="usuarioTelefono"
                                 placeholder="{{ Session::get('cuentaAct')['telefono'] }}">
                         </div>
@@ -391,7 +398,6 @@
             </div>
         </div>
     </div>
-
     <!--Modal editor archivo-->
     <div class="modal fade" id="editarArchivo" tabindex="-1" aria-labelledby="editarArchivoLabel"
         aria-hidden="true">
@@ -444,7 +450,6 @@
             </div>
         </div>
     </div>
-
     <!--Modal Favoritos-->
     <div class="modal fade" id="favorito" tabindex="-1" aria-labelledby="favoritoLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -485,9 +490,11 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalCarpeta" tabindex="-1" role="dialog" aria-labelledby="modalCarpetaLabel"
+        aria-hidden="true">
+    </div>
 
-    <script src="{{ url('js/main.js') }}"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>
@@ -495,6 +502,7 @@
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
     </script>
 
-</body>
+    <script src="{{ url('js/main.js') }}"></script>
 
+</body>
 </html>

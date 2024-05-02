@@ -1,3 +1,12 @@
+
+document.addEventListener("DOMContentLoaded", function() {
+    var myModal = new bootstrap.Modal(document.getElementById('usuarioModal'));
+    var myArchivoModal = new bootstrap.Modal(document.getElementById('modalArchivo'));
+    var myEditarArchivoModal = new bootstrap.Modal(document.getElementById('editarArchivo'));
+    var myfavoritoModal = new bootstrap.Modal(document.getElementById('favorito'));
+    var myCarpetaModal = new bootstrap.Modal(document.getElementById('modalCarpeta'));
+});
+
 function filtrarPorTipo(idTipoArchivo) {
     var filas = document.querySelectorAll('#tablaArchivos tbody tr');
     filas.forEach(function(fila) {
