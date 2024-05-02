@@ -12,7 +12,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
-
 </head>
 
 <body>
@@ -185,17 +184,18 @@
                                             <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i>
                                                 {{ $archivo->carpeta }}
                                             </td>
-                                            <th><i class="fa-solid fa-user-plus"></i> <i data-bs-toggle="modal"
-                                                    data-bs-target="#editarArchivo" data-bs-whatever="@editarArchivo"
+                                            <th><i class="fa-solid fa-user-plus"></i>
+                                                <i data-bs-toggle="modal" data-bs-target="#editarArchivo"
+                                                    data-bs-whatever="@editarArchivo"
                                                     data-idEdit="{{ $archivo->idArchivo }}"
                                                     data-nombreEdit="{{ $archivo->nombre }}"
                                                     data-descripcionEdit="{{ $archivo->descripcion }}"
                                                     data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
                                                     data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
                                                     data-usuarioEdit="yo" data-carpeta="{{ $archivo->carpeta }}"
-                                                    class="fa-solid fa-pen-to-square"></i> <i data-bs-toggle="modal"
-                                                    data-bs-target="#favorito" data-bs-whatever="@favorito"
-                                                    data-nombre="{{ $archivo->nombre }}"
+                                                    class="fa-solid fa-pen-to-square"></i>
+                                                <i data-bs-toggle="modal" data-bs-target="#favorito"
+                                                    data-bs-whatever="@favorito" data-nombre="{{ $archivo->nombre }}"
                                                     data-tipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
                                                     data-fecha="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
                                                     data-usuario="{{ $archivo->usuario->nombre }}"
@@ -486,10 +486,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"
-        integrity="sha384-poY1uw1eMo6+2LbHZFOr52KlOF5IpaupYD9C43eA/jRtmF9jemv5CszYO2ZWfJvH" crossorigin="anonymous">
     </script>
 
 </body>

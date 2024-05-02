@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var descripcion = button.getAttribute('data-descripcionEdit');
         var tipo = button.getAttribute('data-tipoEdit');
         var fecha = button.getAttribute('data-fechaEdit');
-        var usuario = button.getAttribute('data-usuarioEdit');
         var carpeta = button.getAttribute('data-carpeta');
         
         modal.querySelector('#archivoEditId').value = id;
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.querySelector('#archivoEditNombre').value = nombre;
         modal.querySelector('#archivoEditTipo').value = tipo;
         modal.querySelector('#archivoEditFecha').value = fecha;
-        modal.querySelector('#archivoEditUsuario').value = usuario;
         modal.querySelector('#archivoEditCarpeta').value = carpeta;
     });
 });
