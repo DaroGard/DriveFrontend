@@ -37,3 +37,7 @@ Route::post('/guardar-archivo', [MainController::class, 'guardarArchivo'])->name
 Route::put('/usuario/actualizar', [MainController::class, 'actualizarUsuario'])->name('actualizar-usuario');
 
 Route::put('/archivos/actualizar/', [MainController::class, 'actualizarArchivo'])->name('archivos-actualizar');
+
+Route::post('/guardar-carpeta', [MainController::class, 'guardarCarpeta'])->name('guardar-carpeta');
+
+Route::put('/carpeta/agregar/', [MainController::class, 'agregarArchivoCarpeta'])->name('carpeta-archivo');

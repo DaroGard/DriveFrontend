@@ -7,6 +7,23 @@ document.addEventListener("DOMContentLoaded", function() {
     var myCarpetaModal = new bootstrap.Modal(document.getElementById('modalCarpeta'));
 });
 
+$(document).ready(function(){
+    $('#tablaPrincipal').show();
+
+    $('.list-group-item').click(function(){
+
+        $('.list-group-item').removeClass('active');
+
+        $(this).addClass('active');
+
+        $('table').hide();
+
+        var targetTableId = $(this).attr('data-target-table');
+        $('#' + targetTableId).show();
+    });
+});
+
+
 function filtrarPorTipo(idTipoArchivo) {
     var filas = document.querySelectorAll('#tablaArchivos tbody tr');
     filas.forEach(function(fila) {
@@ -28,8 +45,10 @@ document.addEventListener('DOMContentLoaded', function () {
         var descripcion = button.getAttribute('data-descripcionEdit');
         var tipo = button.getAttribute('data-tipoEdit');
         var fecha = button.getAttribute('data-fechaEdit');
-        var carpeta = button.getAttribute('data-carpeta');
+        var carpeta = button.getAttribute('data-carpetaEdit');
         
+        console.log(id);
+
         modal.querySelector('#archivoEditId').value = id;
         modal.querySelector('#archivoEditDescripcion').value = descripcion;
         modal.querySelector('#archivoEditNombre').value = nombre;
@@ -71,7 +90,6 @@ function toggleTabla() {
         tablaArchivos.style.display = 'table';
         tablaCarpetas.style.display = 'none';
 
-        // Mostrar todas las filas de archivos
         const filasArchivos = document.querySelectorAll('#tablaArchivos tbody tr');
         filasArchivos.forEach((fila) => {
             fila.style.display = 'table-row';
@@ -80,11 +98,9 @@ function toggleTabla() {
         tablaArchivos.style.display = 'none';
         tablaCarpetas.style.display = 'table';
     }
-    
 }
 
 function filtrarPorCarpeta(idCarpeta) {
-    // Cambiar a la tabla de archivos
     tablaArchivos.style.display = 'table';
     tablaCarpetas.style.display = 'none';
 
@@ -94,7 +110,7 @@ function filtrarPorCarpeta(idCarpeta) {
         console.log('idCarpetaArchivo:', idCarpetaArchivo);
         console.log('idCarpeta:', idCarpeta);
 
-        if (!idCarpetaArchivo || idCarpetaArchivo !== idCarpeta.toString()) {
+        if (idCarpetaArchivo !== idCarpeta.toString()) {
             console.log('Ocultando fila:', fila);
             fila.style.display = 'none';
         } else {
@@ -103,13 +119,40 @@ function filtrarPorCarpeta(idCarpeta) {
         }
     });
 }
+
 btnArchivo.addEventListener('change', toggleTabla);
 btnCarpeta.addEventListener('change', toggleTabla);
 
 iconosCarpeta.forEach((icono) => {
     icono.addEventListener('click', function() {
         const idCarpeta = this.parentNode.parentNode.getAttribute('data-tipo');
-        toggleTabla(); // Cambiar a la tabla de archivos si no lo está ya
         filtrarPorCarpeta(idCarpeta);
+        toggleTabla();
     });
 });
+
+document.getElementById("nuevoArchivo").addEventListener("click", function() {
+    $('#modalArchivo').modal('show');
+});
+
+document.getElementById("nuevaCarpeta").addEventListener("click", function() {
+    $('#modalCarpeta').modal('show');
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById('modalDetallesArchivo');
+    modal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-idArchivoDetalles');
+        var nombre = button.getAttribute('data-nombre');
+        var descripcion = button.getAttribute('data-descripcion');
+
+        document.getElementById('idDetalleArchivo').value = id;
+        document.getElementById('nombreDetalleArchivo').value = nombre;
+        document.getElementById('descripcionDetalleArchivo').value = descripcion;
+
+    });
+});
+
+

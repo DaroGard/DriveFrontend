@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use GuzzleHttp\Exception\RequestException;
 
 
 class MainController extends Controller
@@ -54,7 +53,6 @@ class MainController extends Controller
             throw new \InvalidArgumentException("El tipo de archivo no es un entero válido.");
         }
 
-        // Construye el cuerpo de la solicitud JSON
         $body = [
             'usuario' => [
                 'idUsuario' => $idUsuario
@@ -162,6 +160,63 @@ class MainController extends Controller
             } else {
                 return response()->json([
                     'error' => 'Error al actualizar el archivo',
+                ], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function guardarCarpeta(Request $request)
+    {
+        $client = new Client();
+
+        $nombre = $request->input('nombreCarpeta');
+
+        $body = [
+            'nombreCarpeta' => $nombre,
+        ];
+
+        $response = $client->post('http://localhost:8080/drive/carpetas/guardar', [
+            'json' => $body
+        ]);
+
+        return redirect()->route('main-page');
+    }
+
+    public function agregarArchivoCarpeta(Request $request)
+    {
+
+        $idCarpeta = $request->input('buscarCarpeta');
+
+        $client = new Client([
+            'base_uri' => 'http://localhost:8080/',
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        $idArchivo = $request->input('idDetalleArchivo');
+
+        $data = [
+            'archivos' => [
+                ['idArchivo' => $idArchivo]
+            ],
+        ];
+
+        try {
+            $response = $client->request('PUT', 'drive/carpetas/actualizar/'. $idCarpeta, [
+                'json' => $data,
+            ]);
+
+            if ($response->getStatusCode() === 200) {
+                return redirect()->route('main-page');
+            } else {
+                return response()->json([
+                    'error' => 'Error al agregar el archivo',
                 ], $response->getStatusCode());
             }
         } catch (\Exception $e) {

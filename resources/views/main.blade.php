@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,40 +13,46 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div id="cajaPrincipal">
         <section id="seccionUno">
             <div id="logo"><img
                     src="{{ url('https://ssl.gstatic.com/images/branding/product/2x/hh_drive_36dp.png') }}"
                     alt="logo.png" style="width: 40px; height: 40px; margin-right: 2%">Drive</div>
-            <button type="button" role="button" tabindex="0" class="brbsPe Ss7qXc a-qb-d" aria-disabled="false"
-                aria-expanded="false" aria-haspopup="true" guidedhelpid="new_menu_button" style="user-select: none;"
-                data-bs-toggle="modal" data-bs-target="#modalArchivo" data-bs-whatever="@getbootstrap">
-                <i role="presentation" class="cUCuw   upeNge KuOzJf QmyJdb vA3Shd" ssk="6:aP5GMe"></i>
-                <i role="presentation" class="WNpj6b i1jHKe" ssk="6:jC5xjb"></i>
-                <span>
-                    <span class="a-ec-Gd-zc-c">
-                        <svg class="Q6yead QJZfhe " width="24" height="24" viewBox="0 0 24 24" focusable="false">
-                            <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
-                        </svg>
+            <div class="dropdown">
+                <button
+                    style="margin: 16%;margin-bottom: 10%;border-radius: 18px;width: 58%;height: 52%;color: black;background: white;border: none; padding-right: 10%; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);"
+                    class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <span>
+                        <span class="a-ec-Gd-zc-c">
+                            <svg class="Q6yead QJZfhe " width="24" height="24" viewBox="0 0 24 24"
+                                focusable="false">
+                                <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
+                            </svg>
+                        </span>
                     </span>
-                </span>
-                <span class="jYPt8c">Nuevo</span>
-            </button>
+                    <span class="jYPt8c">Nuevo</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="#" id="nuevoArchivo">Nuevo Archivo</a></li>
+                    <li><a class="dropdown-item" href="#" id="nuevaCarpeta">Nueva Carpeta</a></li>
+                </ul>
+            </div>
             <div id="navMenu">
                 <div class="list-group">
-                    <button type="button" class="list-group-item list-group-item-action active" aria-current="true"><i
-                            class="fa-solid fa-house"></i> Pagina Principal</button>
-                    <button type="button" class="list-group-item list-group-item-action"><i
-                            class="fa-solid fa-laptop-file"></i> Computadoras</button>
-                    <button type="button" class="list-group-item list-group-item-action"><i
-                            class="fa-solid fa-users"></i> Compartidos</button>
-                    <button type="button" class="list-group-item list-group-item-action"><i
-                            class="fa-solid fa-star"></i> Destacados</button>
-                    <button type="button" class="list-group-item list-group-item-action"><i
-                            class="fa-solid fa-recycle"></i> Papelera</button>
+                    <button type="button" class="list-group-item list-group-item-action active"
+                            data-target-table="tablaArchivos"><i class="fa-solid fa-house"></i> Pagina Principal</button>
+                    <button type="button" class="list-group-item list-group-item-action"
+                            data-target-table="tablaComputadoras"><i class="fa-solid fa-laptop-file"></i> Computadoras</button>
+                    <button type="button" class="list-group-item list-group-item-action"
+                            data-target-table="tablaCompartidos"><i class="fa-solid fa-users"></i> Compartidos</button>
+                    <button type="button" class="list-group-item list-group-item-action"
+                            data-target-table="tablaDestacados"><i class="fa-solid fa-star"></i> Destacados</button>
+                    <button type="button" class="list-group-item list-group-item-action"
+                            data-target-table="tablaPapelera"><i class="fa-solid fa-recycle"></i> Papelera</button>
                 </div>
-            </div>
             <div id="almacenamiento">
                 <h6><i class="fa-solid fa-cloud"></i> Almacenamiento</h6>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0"
@@ -59,7 +66,7 @@
                 <div class="d-inline" style="margin-right: 1.5%;">
                     <div data-bs-toggle="modal" data-bs-target="#usuarioModal" data-bs-whatever="@usuarioModal"
                         role="button" class="cursor-pointer">
-                        <i class="fas fa-cog"></i> <!-- Utilizando las clases de Font Awesome 5 -->
+                        <i class="fas fa-cog"></i>
                     </div>
                 </div>
                 @if (Session::get('cuentaAct')['imagen'] != null)
@@ -191,9 +198,21 @@
                                             <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}</td>
                                             <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
                                                 {{ $archivo->usuario->nombre }}</td>
-                                            <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i>
-                                                {{ $archivo->carpeta }}
-                                            </td>
+                                            @if ($archivo->carpeta != null)
+                                                <td>
+                                                    <i class="fa-regular fa-folder" style="margin-right: 4%"></i>
+                                                    {{ $archivo->carpeta->nombreCarpeta }}
+                                                </td>
+                                            @else
+                                                <td>
+                                                    <i class="fa-regular fa-folder" style="margin-right: 4%"
+                                                        data-bs-toggle="modal" data-bs-target="#modalDetallesArchivo"
+                                                        data-idArchivoDetalles="{{ $archivo->idArchivo }}"
+                                                        data-nombre="{{ $archivo->nombre }}"
+                                                        data-descripcion="{{ $archivo->descripcion }}"></i>
+                                                    {{ $archivo->carpeta }}
+                                                </td>
+                                            @endif
                                             <th><i class="fa-solid fa-user-plus"></i>
                                                 <i data-bs-toggle="modal" data-bs-target="#editarArchivo"
                                                     data-bs-whatever="@editarArchivo"
@@ -202,14 +221,14 @@
                                                     data-descripcionEdit="{{ $archivo->descripcion }}"
                                                     data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
                                                     data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
-                                                    data-usuarioEdit="yo" data-carpeta="{{ $archivo->carpeta }}"
+                                                    data-usuarioEdit="yo"
                                                     class="fa-solid fa-pen-to-square"></i>
                                                 <i data-bs-toggle="modal" data-bs-target="#favorito"
                                                     data-bs-whatever="@favorito" data-nombre="{{ $archivo->nombre }}"
                                                     data-tipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
                                                     data-fecha="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
                                                     data-usuario="{{ $archivo->usuario->nombre }}"
-                                                    data-carpeta="{{ $archivo->carpeta }}"
+                                                    data-carpeta="{{ $archivo->carpeta ? $archivo->carpeta->nombreCarpeta : '' }}"
                                                     class="fa-regular fa-star"></i> <i class="fa-solid fa-trash"></i>
                                             </th>
                                         </tr>
@@ -261,6 +280,14 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                            </table>
+                            <table id="tablaComputadoras" style="display: none;" class="table table-striped table-hover mt-4">
+                            </table>
+                            <table id="tablaCompartidos" style="display: none;" class="table table-striped table-hover mt-4">
+                            </table>
+                            <table id="tablaDestacados" style="display: none;" class="table table-striped table-hover mt-4">
+                            </table>
+                            <table id="tablaPapelera" style="display: none;" class="table table-striped table-hover mt-4">
                             </table>
                         </div>
                     </div>
@@ -489,9 +516,74 @@
             </div>
         </div>
     </div>
-
+    <!--Modal Carpetas-->
     <div class="modal fade" id="modalCarpeta" tabindex="-1" role="dialog" aria-labelledby="modalCarpetaLabel"
         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCarpetaLabel">Agregar Carpeta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-carpeta" action="{{ route('guardar-carpeta') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="nombreCarpeta" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreCarpeta" name="nombreCarpeta" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para mostrar detalles del archivo -->
+    <div class="modal fade" id="modalDetallesArchivo" tabindex="-1" aria-labelledby="modalDetallesArchivoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetallesArchivoLabel">Detalles del Archivo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('carpeta-archivo') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label for="idDetalleArchivo" class="form-label">ID:</label>
+                            <input type="text" class="form-control" id="idDetalleArchivo" name="idDetalleArchivo" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreDetalleArchivo" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreDetalleArchivo" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcionDetalleArchivo" class="form-label">Descripción:</label>
+                            <textarea class="form-control" id="descripcionDetalleArchivo" rows="3" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buscarCarpeta">Carpeta:</label>
+                            <select class="form-control" id="buscarCarpeta" name="buscarCarpeta" required>
+                                <option value="">Seleccionar</option>
+                                @foreach ($carpetas as $carpeta)
+                                    <option value="{{ $carpeta->idCarpeta }}">{{ $carpeta->nombreCarpeta }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar en carpeta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -505,4 +597,5 @@
     <script src="{{ url('js/main.js') }}"></script>
 
 </body>
+
 </html>
