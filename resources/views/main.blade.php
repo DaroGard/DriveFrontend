@@ -139,6 +139,8 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($archivos as $archivo)
+                                    <tr data-idArchivo="{{ $archivo->idArchivo }}">
+                                        <td style="display: none"></td>
                                         <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
                                             <td style="display: none"></td>
                                             @if ($archivo->tipoArchivo->idTipoArchivo == 1)
@@ -219,28 +221,33 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($carpetas as $carpeta)
-                                        <tr data-tipo="{{ $carpeta->idCarpeta }}">
-                                            <td style="display: none"></td>
-                                            <td><i class="fa-solid fa-folder"
-                                                    style="margin-right: 4%"></i>{{ $carpeta->nombreCarpeta }}</td>
+                                    <tr class="fila-carpeta" data-tipo="{{ $carpeta->idCarpeta }}">
+                                        <td style="display: none"></td>
+                                        <td>
+                                            <i class="fa-solid fa-folder" style="margin-right: 4%" onclick="filtrarPorCarpeta('{{ $carpeta->idCarpeta }}')"></i>{{ $carpeta->nombreCarpeta }}
+                                        </td>
                                             <td>{{ $carpeta->estadoCarpeta->estado }}</td>
-                                            <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
-                                                {{ Session::get('cuentaAct')['nombre'] }}</td>
-                                            <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i>
-                                                {{ $carpeta->carpetaPadre }}
+                                            <td><i class="fa-solid fa-user"
+                                                    style="margin-right: 4%"></i>{{ Session::get('cuentaAct')['nombre'] }}
                                             </td>
-                                            <th><i class="fa-solid fa-user-plus"></i> <i data-bs-toggle="modal"
-                                                    data-bs-target="#editarcarpeta" data-bs-whatever="@editarcarpeta"
+                                            <td><i class="fa-regular fa-folder"
+                                                    style="margin-right: 4%"></i>{{ $carpeta->carpetaPadre }}</td>
+                                            <th>
+                                                <i class="fa-solid fa-user-plus"></i>
+                                                <i data-bs-toggle="modal" data-bs-target="#editarcarpeta"
+                                                    data-bs-whatever="@editarcarpeta"
                                                     data-idEditCarp="{{ $carpeta->idCarpeta }}"
                                                     data-nombreEditCarp="{{ $carpeta->nombreCarpeta }}"
                                                     data-usuarioEditCarp="{{ Session::get('cuentaAct')['nombre'] }}"
                                                     data-carpetaPadre="{{ $carpeta->carpetaPadre }}"
-                                                    class="fa-solid fa-pen-to-square"></i> <i data-bs-toggle="modal"
-                                                    data-bs-target="#favoritoCarp" data-bs-whatever="@favoritoCarp"
+                                                    class="fa-solid fa-pen-to-square"></i>
+                                                <i data-bs-toggle="modal" data-bs-target="#favoritoCarp"
+                                                    data-bs-whatever="@favoritoCarp"
                                                     data-nombre="{{ $carpeta->nombreCarpeta }}"
                                                     data-usuario="{{ Session::get('cuentaAct')['nombre'] }}"
                                                     data-carpeta="{{ $carpeta->carpetaPadre }}"
-                                                    class="fa-regular fa-star"></i><i class="fa-solid fa-trash"></i>
+                                                    class="fa-regular fa-star"></i>
+                                                <i class="fa-solid fa-trash"></i>
                                             </th>
                                         </tr>
                                     @endforeach
