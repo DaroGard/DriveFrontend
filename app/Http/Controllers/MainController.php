@@ -136,9 +136,6 @@ class MainController extends Controller
 
         $idArchivo = $request->input('archivoEditId');
 
-        dd($idArchivo);
-
-
         $client = new Client([
             'base_uri' => 'http://localhost:8080/',
             'headers' => [
