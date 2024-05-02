@@ -27,6 +27,7 @@ class MainController extends Controller
         $responseGenero = $client->request('GET', '/drive/usuario/genero/todos');
         $responseLugar = $client->request('GET', 'drive/lugares/todos');
         $responsePreferencia = $client->request('GET', 'drive/usuarios/preferencia/todas');
+        $responseCarpeta = $client->request('GET', '/drive/carpetas/todas');
 
         $tiposArchivos = json_decode($responseTipoArchivo->getBody()->getContents());
         $usuarios = json_decode($responseUsuarios->getBody()->getContents());
@@ -34,8 +35,9 @@ class MainController extends Controller
         $generos = json_decode($responseGenero->getBody()->getContents());
         $lugares = json_decode($responseLugar->getBody()->getContents());
         $preferencias = json_decode(($responsePreferencia->getBody()->getContents()));
+        $carpetas = json_decode(($responseCarpeta->getBody()->getContents()));
 
-        return view('main', compact('tiposArchivos', 'usuarios', 'archivos', 'generos', 'lugares', 'preferencias'));
+        return view('main', compact('tiposArchivos', 'usuarios', 'archivos', 'generos', 'lugares', 'preferencias', 'carpetas'));
     }
 
     public function guardarArchivo(Request $request)

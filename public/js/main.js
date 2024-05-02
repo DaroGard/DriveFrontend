@@ -49,3 +49,23 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.querySelector('#archivoFavCarpeta').value = carpeta;
     });
 });
+
+
+const btnArchivo = document.getElementById('btnradio1');
+const btnCarpeta = document.getElementById('btnradio2');
+
+const tablaArchivos = document.getElementById('tablaArchivos');
+const tablaCarpetas = document.getElementById('tablaCarpetas');
+
+function toggleTabla() {
+    if (btnArchivo.checked) {
+        tablaArchivos.style.display = 'table';
+        tablaCarpetas.style.display = 'none';
+    } else {
+        tablaArchivos.style.display = 'none';
+        tablaCarpetas.style.display = 'table';
+    }
+}
+
+btnArchivo.addEventListener('change', toggleTabla);
+btnCarpeta.addEventListener('change', toggleTabla);

@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -52,16 +53,15 @@
         </section>
         <section id="seccionDos">
             <div id="usuario">
-                <div style="margin-right: 1.5%;"><i class="fa-solid fa-gear"></i></div>
+                <div style="margin-right: 1.5%;" data-bs-toggle="modal" data-bs-target="#usuarioModal"
+                    data-bs-whatever="@usuarioModal"><i class="fa-solid fa-gear"></i></div>
                 @if (Session::get('cuentaAct')['imagen'] != null)
-                    <div id="imagen" data-bs-toggle="modal" data-bs-target="#usuarioModal"
-                        data-bs-whatever="@usuarioModal">
+                    <div id="imagen">
                         <img src="{{ asset(Session::get('cuentaAct')['imagen']) }}"
                             style="width:100%; height: auto; object-fit: cover;">
                     </div>
                 @else
-                    <div id="imagen" data-bs-toggle="modal" data-bs-target="#usuarioModal"
-                        data-bs-whatever="@usuarioModal"><img src="{{ asset('img/default-picture.png') }}"
+                    <div id="imagen"><img src="{{ asset('img/default-picture.png') }}"
                             style="width:100%; height: auto; object-fit: cover;"></div>
                 @endif
             </div>
@@ -180,27 +180,68 @@
                                                 @endif
                                             @endif
                                             <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}</td>
-                                            <td><i class="fa-solid fa-user" style="margin-right: 4%"></i> {{ $archivo->usuario->nombre }}</td>
+                                            <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
+                                                {{ $archivo->usuario->nombre }}</td>
                                             <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i>
                                                 {{ $archivo->carpeta }}
                                             </td>
-                                            <th><i class="fa-solid fa-user-plus"></i> <i  data-bs-toggle="modal" data-bs-target="#editarArchivo"
-                                                data-bs-whatever="@editarArchivo"
-                                                data-idEdit="{{ $archivo->idArchivo }}"
-                                                data-nombreEdit="{{ $archivo->nombre }}"
-                                                data-descripcionEdit="{{ $archivo->descripcion }}"
-                                                data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
-                                                data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
-                                                data-usuarioEdit="yo" data-carpeta="{{ $archivo->carpeta }}"
-                                                        class="fa-solid fa-pen-to-square"></i> <i
-                                                        data-bs-toggle="modal" data-bs-target="#favorito"
-                                                        data-bs-whatever="@favorito"
-                                                        data-nombre="{{ $archivo->nombre }}"
-                                                        data-tipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
-                                                        data-fecha="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
-                                                        data-usuario="{{ $archivo->usuario->nombre }}" data-carpeta="{{ $archivo->carpeta }}"
-                                                        class="fa-regular fa-star"></i> <i
-                                                        class="fa-solid fa-trash"></i></th>
+                                            <th><i class="fa-solid fa-user-plus"></i> <i data-bs-toggle="modal"
+                                                    data-bs-target="#editarArchivo" data-bs-whatever="@editarArchivo"
+                                                    data-idEdit="{{ $archivo->idArchivo }}"
+                                                    data-nombreEdit="{{ $archivo->nombre }}"
+                                                    data-descripcionEdit="{{ $archivo->descripcion }}"
+                                                    data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                    data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                    data-usuarioEdit="yo" data-carpeta="{{ $archivo->carpeta }}"
+                                                    class="fa-solid fa-pen-to-square"></i> <i data-bs-toggle="modal"
+                                                    data-bs-target="#favorito" data-bs-whatever="@favorito"
+                                                    data-nombre="{{ $archivo->nombre }}"
+                                                    data-tipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                    data-fecha="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                    data-usuario="{{ $archivo->usuario->nombre }}"
+                                                    data-carpeta="{{ $archivo->carpeta }}"
+                                                    class="fa-regular fa-star"></i> <i class="fa-solid fa-trash"></i>
+                                            </th>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <table id="tablaCarpetas" style="display: none;"
+                                class="table table-striped table-hover mt-4">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Carpeta</th>
+                                        <th>Estado</th>
+                                        <th>Usuario</th>
+                                        <th>Carpeta Padre</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($carpetas as $carpeta)
+                                        <tr data-tipo="{{ $carpeta->idCarpeta }}">
+                                            <td style="display: none"></td>
+                                            <td><i class="fa-solid fa-folder"
+                                                    style="margin-right: 4%"></i>{{ $carpeta->nombreCarpeta }}</td>
+                                            <td>{{ $carpeta->estadoCarpeta->estado }}</td>
+                                            <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
+                                                {{ Session::get('cuentaAct')['nombre'] }}</td>
+                                            <td><i class="fa-regular fa-folder" style="margin-right: 4%"></i>
+                                                {{ $carpeta->carpetaPadre }}
+                                            </td>
+                                            <th><i class="fa-solid fa-user-plus"></i> <i data-bs-toggle="modal"
+                                                    data-bs-target="#editarcarpeta" data-bs-whatever="@editarcarpeta"
+                                                    data-idEditCarp="{{ $carpeta->idCarpeta }}"
+                                                    data-nombreEditCarp="{{ $carpeta->nombreCarpeta }}"
+                                                    data-usuarioEditCarp="{{ Session::get('cuentaAct')['nombre'] }}"
+                                                    data-carpetaPadre="{{ $carpeta->carpetaPadre }}"
+                                                    class="fa-solid fa-pen-to-square"></i> <i data-bs-toggle="modal"
+                                                    data-bs-target="#favoritoCarp" data-bs-whatever="@favoritoCarp"
+                                                    data-nombre="{{ $carpeta->nombreCarpeta }}"
+                                                    data-usuario="{{ Session::get('cuentaAct')['nombre'] }}"
+                                                    data-carpeta="{{ $carpeta->carpetaPadre }}"
+                                                    class="fa-regular fa-star"></i><i class="fa-solid fa-trash"></i>
+                                            </th>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -209,7 +250,8 @@
                     </div>
                 </div>
             </div>
-        </section>
+    </div>
+    </section>
     </div>
     <!--Modal guardar archivos-->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -343,8 +385,9 @@
         </div>
     </div>
 
-<!--Modal editor archivo-->
-    <div class="modal fade" id="editarArchivo" tabindex="-1" aria-labelledby="editarArchivoLabel" aria-hidden="true">
+    <!--Modal editor archivo-->
+    <div class="modal fade" id="editarArchivo" tabindex="-1" aria-labelledby="editarArchivoLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -357,27 +400,33 @@
                         @method('PUT')
                         <div class="mb-3" style="display: none">
                             <label for="archivoEditId" class="col-form-label">ID:</label>
-                            <input type="text" class="form-control" id="archivoEditId" name="archivoEditId" readonly>
+                            <input type="text" class="form-control" id="archivoEditId" name="archivoEditId"
+                                readonly>
                         </div>
                         <div class="mb-3">
                             <label for="archivoEditNombre" class="col-form-label">Nombre:</label>
-                            <input type="text" class="form-control" id="archivoEditNombre" name="archivoEditNombre">
+                            <input type="text" class="form-control" id="archivoEditNombre"
+                                name="archivoEditNombre">
                         </div>
                         <div class="mb-3">
                             <label for="archivoEditDescripcion" class="col-form-label">Descripcion:</label>
-                            <input type="text" class="form-control" id="archivoEditDescripcion" name="archivoEditDescripcion">
+                            <input type="text" class="form-control" id="archivoEditDescripcion"
+                                name="archivoEditDescripcion">
                         </div>
                         <div class="mb-3" style="display: none">
                             <label for="archivoEditTipo" class="col-form-label">Tipo:</label>
-                            <input type="text" class="form-control" id="archivoEditTipo" name="archivoEditTipo" readonly>
+                            <input type="text" class="form-control" id="archivoEditTipo" name="archivoEditTipo"
+                                readonly>
                         </div>
                         <div class="mb-3" style="display: none">
                             <label for="archivoEditFecha" class="col-form-label">Fecha de Creación:</label>
-                            <input type="text" class="form-control" id="archivoEditFecha" name="archivoEditFecha" readonly>
+                            <input type="text" class="form-control" id="archivoEditFecha" name="archivoEditFecha"
+                                readonly>
                         </div>
                         <div class="mb-3">
                             <label for="archivoEditCarpeta" class="col-form-label">Carpeta:</label>
-                            <input type="text" class="form-control" id="archivoEditCarpeta" name="archivoEditCarpeta" readonly>
+                            <input type="text" class="form-control" id="archivoEditCarpeta"
+                                name="archivoEditCarpeta" readonly>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Editar</button>
@@ -430,8 +479,6 @@
     </div>
 
 
-
-
     <script src="{{ url('js/main.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -440,6 +487,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"
+        integrity="sha384-poY1uw1eMo6+2LbHZFOr52KlOF5IpaupYD9C43eA/jRtmF9jemv5CszYO2ZWfJvH" crossorigin="anonymous">
+    </script>
+
 </body>
 
 </html>
