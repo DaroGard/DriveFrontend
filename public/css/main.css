@@ -193,3 +193,14 @@ body {
 .mt-4 {
     width: 147%!important;
 }
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}

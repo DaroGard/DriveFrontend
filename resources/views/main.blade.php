@@ -24,7 +24,7 @@
                 <button
                     style="margin: 16%;margin-bottom: 10%;border-radius: 18px;width: 58%;height: 52%;color: black;background: white;border: none; padding-right: 10%; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);"
                     class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
+                    data-bs-toggle="dropdown" aria-expanded="false" {{ $totalTamano >= $maximo ? 'disabled' : '' }}>
                     <span>
                         <span class="a-ec-Gd-zc-c">
                             <svg class="Q6yead QJZfhe " width="24" height="24" viewBox="0 0 24 24"
@@ -38,28 +38,39 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="#" id="nuevoArchivo">Nuevo Archivo</a></li>
                     <li><a class="dropdown-item" href="#" id="nuevaCarpeta">Nueva Carpeta</a></li>
+                    <li><a class="dropdown-item" href="#" id="nuevaComputadora">Nueva Computadora</a></li>
+                    <li><a class="dropdown-item" href="#" id="nuevaGrupo">Nuevo Grupo</a></li>
+                    <li><a class="dropdown-item" href="#" id="nuevaTarjeta">Nueva Tarjeta</a></li>
                 </ul>
             </div>
+
+            @if ($totalTamano >= $maximo)
+                <div class="alert alert-danger" role="alert">
+                    ¡Has superado el límite de almacenamiento!
+                </div>
+            @endif
             <div id="navMenu">
                 <div class="list-group">
                     <button type="button" class="list-group-item list-group-item-action active"
-                            data-target-table="tablaArchivos"><i class="fa-solid fa-house"></i> Pagina Principal</button>
+                        data-target-table="tablaArchivos"><i class="fa-solid fa-house"></i> Pagina Principal</button>
                     <button type="button" class="list-group-item list-group-item-action"
-                            data-target-table="tablaComputadoras"><i class="fa-solid fa-laptop-file"></i> Computadoras</button>
+                        data-target-table="tablaComputadoras"><i class="fa-solid fa-laptop-file"></i>
+                        Computadoras</button>
                     <button type="button" class="list-group-item list-group-item-action"
-                            data-target-table="tablaCompartidos"><i class="fa-solid fa-users"></i> Compartidos</button>
+                        data-target-table="tablaCompartidos"><i class="fa-solid fa-users"></i> Compartidos</button>
                     <button type="button" class="list-group-item list-group-item-action"
-                            data-target-table="tablaDestacados"><i class="fa-solid fa-star"></i> Destacados</button>
+                        data-target-table="tablaDestacados"><i class="fa-solid fa-star"></i> Destacados</button>
                     <button type="button" class="list-group-item list-group-item-action"
-                            data-target-table="tablaPapelera"><i class="fa-solid fa-recycle"></i> Papelera</button>
+                        data-target-table="tablaPapelera"><i class="fa-solid fa-recycle"></i> Papelera</button>
                 </div>
-            <div id="almacenamiento">
-                <h6><i class="fa-solid fa-cloud"></i> Almacenamiento</h6>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0"
-                    aria-valuemax="100">
-                    <div class="progress-bar w-75"></div>
+                <div id="almacenamiento">
+                    <h6><i class="fa-solid fa-cloud"></i> Almacenamiento</h6>
+                    <div class="progress" role="progressbar" aria-label="Basic example"
+                        aria-valuenow="{{ $totalTamano }}" aria-valuemin="0" aria-valuemax="{{ $maximo }}">
+                        <div class="progress-bar" style="width: {{ $porcentaje }}%;"
+                            aria-valuenow="{{ $totalTamano }}"></div>
+                    </div>
                 </div>
-            </div>
         </section>
         <section id="seccionDos">
             <div id="usuario">
@@ -141,6 +152,7 @@
                 <div id="archivosNav">
                     <div class="col-md-8">
                         <div class="table-container">
+                            <!--Tabla Archivos-->
                             <table id="tablaArchivos" class="table table-striped table-hover mt-4">
                                 <thead class="thead-dark">
                                     <tr>
@@ -154,87 +166,108 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($archivos as $archivo)
-                                        <tr data-idArchivo="{{ $archivo->idArchivo }}">
-                                            <td style="display: none"></td>
-                                        <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
-                                            <td style="display: none"></td>
-                                            @if ($archivo->tipoArchivo->idTipoArchivo == 1)
-                                                <td><i class="fa-solid fa-file-pdf"
-                                                        style="margin-right: 4%"></i>{{ $archivo->nombre }}</td>
-                                            @else
-                                                @if ($archivo->tipoArchivo->idTipoArchivo == 2 || $archivo->tipoArchivo->idTipoArchivo == 4)
-                                                    <td><i class="fa-solid fa-file-image"
+                                        @if ($archivo->usuario->idUsuario == Session::get('cuentaAct')['idUsuario'] && $archivo->estadoArchivo->idEstado == 1)
+                                            <tr data-tamano="{{ $archivo->tamano }}">
+                                                <td style="display: none"></td>
+                                            </tr>
+                                            <tr data-idArchivo="{{ $archivo->idArchivo }}">
+                                                <td style="display: none"></td>
+                                            <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
+                                                <td style="display: none"></td>
+                                                @if ($archivo->tipoArchivo->idTipoArchivo == 1)
+                                                    <td><i class="fa-solid fa-file-pdf"
                                                             style="margin-right: 4%"></i>{{ $archivo->nombre }}</td>
                                                 @else
-                                                    @if ($archivo->tipoArchivo->idTipoArchivo == 3)
-                                                        <td><i class="fa-solid fa-file-word"
+                                                    @if ($archivo->tipoArchivo->idTipoArchivo == 2 || $archivo->tipoArchivo->idTipoArchivo == 4)
+                                                        <td><i class="fa-solid fa-file-image"
                                                                 style="margin-right: 4%"></i>{{ $archivo->nombre }}
                                                         </td>
                                                     @else
-                                                        @if ($archivo->tipoArchivo->idTipoArchivo == 5)
-                                                            <td><i class="fa-solid fa-file-file"
+                                                        @if ($archivo->tipoArchivo->idTipoArchivo == 3)
+                                                            <td><i class="fa-solid fa-file-word"
                                                                     style="margin-right: 4%"></i>{{ $archivo->nombre }}
                                                             </td>
                                                         @else
-                                                            @if ($archivo->tipoArchivo->idTipoArchivo == 6)
-                                                                <td><i class="fa-solid fa-file-audio"
+                                                            @if ($archivo->tipoArchivo->idTipoArchivo == 5)
+                                                                <td><i class="fa-solid fa-file-file"
                                                                         style="margin-right: 4%"></i>{{ $archivo->nombre }}
                                                                 </td>
                                                             @else
-                                                                @if ($archivo->tipoArchivo->idTipoArchivo == 7)
-                                                                    <td><i class="fa-solid fa-file-video"
+                                                                @if ($archivo->tipoArchivo->idTipoArchivo == 6)
+                                                                    <td><i class="fa-solid fa-file-audio"
                                                                             style="margin-right: 4%"></i>{{ $archivo->nombre }}
                                                                     </td>
                                                                 @else
-                                                                    <td><i class="fa-solid fa-file-lines"
-                                                                            style="margin-right: 4%"></i>{{ $archivo->nombre }}
-                                                                    </td>
+                                                                    @if ($archivo->tipoArchivo->idTipoArchivo == 7)
+                                                                        <td><i class="fa-solid fa-file-video"
+                                                                                style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                        </td>
+                                                                    @else
+                                                                        <td><i class="fa-solid fa-file-lines"
+                                                                                style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                        </td>
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         @endif
                                                     @endif
                                                 @endif
-                                            @endif
-                                            <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}</td>
-                                            <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
-                                                {{ $archivo->usuario->nombre }}</td>
-                                            @if ($archivo->carpeta != null)
-                                                <td>
-                                                    <i class="fa-regular fa-folder" style="margin-right: 4%"></i>
-                                                    {{ $archivo->carpeta->nombreCarpeta }}
-                                                </td>
-                                            @else
-                                                <td>
-                                                    <i class="fa-regular fa-folder" style="margin-right: 4%"
-                                                        data-bs-toggle="modal" data-bs-target="#modalDetallesArchivo"
-                                                        data-idArchivoDetalles="{{ $archivo->idArchivo }}"
+                                                <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}</td>
+                                                <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
+                                                    {{ $archivo->usuario->nombre }}</td>
+                                                @if ($archivo->carpeta != null)
+                                                    <td>
+                                                        <i class="fa-regular fa-folder" style="margin-right: 4%"></i>
+                                                        {{ $archivo->carpeta->nombreCarpeta }}
+                                                    </td>
+                                                @else
+                                                    <td>
+                                                        <i class="fa-regular fa-folder" style="margin-right: 4%"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalDetallesArchivo"
+                                                            data-idArchivoDetalles="{{ $archivo->idArchivo }}"
+                                                            data-nombre="{{ $archivo->nombre }}"
+                                                            data-descripcion="{{ $archivo->descripcion }}"></i>
+                                                        {{ $archivo->carpeta }}
+                                                    </td>
+                                                @endif
+                                                <th><i class="fa-solid fa-user-plus"></i>
+                                                    <i data-bs-toggle="modal" data-bs-target="#editarArchivo"
+                                                        data-bs-whatever="@editarArchivo"
+                                                        data-idEdit="{{ $archivo->idArchivo }}"
+                                                        data-nombreEdit="{{ $archivo->nombre }}"
+                                                        data-descripcionEdit="{{ $archivo->descripcion }}"
+                                                        data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                        data-usuarioEdit="yo" class="fa-solid fa-pen-to-square"></i>
+                                                        @if ($archivo->favorito != null)
+                                                        <i class="fa-regular fa-star" style="color: gold"></i>
+                                                        @else
+                                                        <i data-bs-toggle="modal" data-bs-target="#favorito"
+                                                        data-bs-whatever="@favorito"
+                                                        data-id="{{ $archivo->idArchivo }}"
                                                         data-nombre="{{ $archivo->nombre }}"
-                                                        data-descripcion="{{ $archivo->descripcion }}"></i>
-                                                    {{ $archivo->carpeta }}
-                                                </td>
-                                            @endif
-                                            <th><i class="fa-solid fa-user-plus"></i>
-                                                <i data-bs-toggle="modal" data-bs-target="#editarArchivo"
-                                                    data-bs-whatever="@editarArchivo"
-                                                    data-idEdit="{{ $archivo->idArchivo }}"
-                                                    data-nombreEdit="{{ $archivo->nombre }}"
-                                                    data-descripcionEdit="{{ $archivo->descripcion }}"
-                                                    data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
-                                                    data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
-                                                    data-usuarioEdit="yo"
-                                                    class="fa-solid fa-pen-to-square"></i>
-                                                <i data-bs-toggle="modal" data-bs-target="#favorito"
-                                                    data-bs-whatever="@favorito" data-nombre="{{ $archivo->nombre }}"
-                                                    data-tipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
-                                                    data-fecha="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
-                                                    data-usuario="{{ $archivo->usuario->nombre }}"
-                                                    data-carpeta="{{ $archivo->carpeta ? $archivo->carpeta->nombreCarpeta : '' }}"
-                                                    class="fa-regular fa-star"></i> <i class="fa-solid fa-trash"></i>
-                                            </th>
-                                        </tr>
+                                                        data-tipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-fecha="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                        data-usuario="{{ $archivo->usuario->nombre }}"
+                                                        data-carpeta="{{ $archivo->carpeta ? $archivo->carpeta->nombreCarpeta : '' }}"
+                                                        class="fa-regular fa-star"></i>
+                                                        @endif
+                                                    <i class="fa-solid fa-trash" data-bs-toggle="modal"
+                                                        data-bs-target="#moverPapelera"
+                                                        data-bs-whatever="@moverPapelera"
+                                                        data-archivoPapeleraId="{{ $archivo->idArchivo }}"
+                                                        data-archivoPapeleraNombre="{{ $archivo->nombre }}"
+                                                        data-archivoPapeleraDescripcion="{{ $archivo->descripcion }}"
+                                                        data-archivoPapeleraTipo="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-carpetaPapelera="{{ $archivo->carpeta ? $archivo->carpeta->nombreCarpeta : '' }}"></i>
+                                                </th>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
+                            <!--Tabla Carpetas-->
                             <table id="tablaCarpetas" style="display: none;"
                                 class="table table-striped table-hover mt-4">
                                 <thead class="thead-dark">
@@ -251,8 +284,7 @@
                                         <tr class="fila-carpeta" data-tipo="{{ $carpeta->idCarpeta }}">
                                             <td style="display: none"></td>
                                             <td>
-                                                <i class="fa-solid fa-folder" style="margin-right: 4%"
-                                                    onclick="filtrarPorCarpeta('{{ $carpeta->idCarpeta }}')"></i>{{ $carpeta->nombreCarpeta }}
+                                                <i class="fa-solid fa-folder" style="margin-right: 4%"></i>{{ $carpeta->nombreCarpeta }}
                                             </td>
                                             <td>{{ $carpeta->estadoCarpeta->estado }}</td>
                                             <td><i class="fa-solid fa-user"
@@ -281,13 +313,249 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <table id="tablaComputadoras" style="display: none;" class="table table-striped table-hover mt-4">
+
+                            <!--Tabla Computadoras-->
+                            <table id="tablaComputadoras" style="display: none;"
+                                class="table table-striped table-hover mt-4">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th style="display: none">#Categoria</th>
+                                        <th>Nombre</th>
+                                        <th>Propietario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($computadoras as $computadora)
+                                        @if ($computadora->usuario->idUsuario == Session::get('cuentaAct')['idUsuario'])
+                                            <tr data-idPc="{{ $computadora->idComputadora }}">
+                                                <td style="display: none"></td>
+                                                <td><i class="fa-solid fa-desktop"
+                                                        style="margin-right: 4%"></i>{{ $computadora->nombreComputadora }}
+                                                </td>
+                                                <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
+                                                    {{ $computadora->usuario->nombre }}</td>
+                                                <td>
+                                                    <i class="fa-solid fa-trash" data-bs-toggle="modal"
+                                                        data-bs-target="#eliminarPC" data-bs-whatever="@eliminarPC"
+                                                        data-computadoraEliminarId="{{ $computadora->idComputadora }}"
+                                                        data-computadoraEliminarNombre="{{ $computadora->nombreComputadora }}"></i>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                </tbody>
                             </table>
-                            <table id="tablaCompartidos" style="display: none;" class="table table-striped table-hover mt-4">
+
+                            <!--Tabla Compartidos-->
+                            <table id="tablaCompartidos" style="display: none;"
+                                class="table table-striped table-hover mt-4">
                             </table>
-                            <table id="tablaDestacados" style="display: none;" class="table table-striped table-hover mt-4">
+
+                            <!--Tabla Destacados-->
+                            <table id="tablaDestacados" style="display: none;"
+                                class="table table-striped table-hover mt-4">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th style="display: none">#Categoria</th>
+                                        <th>Nombre</th>
+                                        <th>Motivo Sugerido</th>
+                                        <th>Propietario</th>
+                                        <th>Ubicacion</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($favoritos as $favorito)
+                                        @if (
+                                            $favorito->usuario->idUsuario == Session::get('cuentaAct')['idUsuario'] &&
+                                                $favorito->archivo->estadoArchivo->idEstado == 1)
+                                            <tr data-tamano="{{ $favorito->archivo->tamano }}">
+                                                <td style="display: none"></td>
+                                            </tr>
+                                            <tr data-idArchivo="{{ $favorito->archivo->idArchivo }}">
+                                                <td style="display: none"></td>
+                                            <tr data-tipo="{{ $favorito->archivo->tipoArchivo->idTipoArchivo }}">
+                                                <td style="display: none"></td>
+                                                @if ($favorito->archivo->tipoArchivo->idTipoArchivo == 1)
+                                                    <td><i class="fa-solid fa-file-pdf"
+                                                            style="margin-right: 4%"></i>{{ $favorito->archivo->nombre }}
+                                                    </td>
+                                                @else
+                                                    @if ($favorito->archivo->tipoArchivo->idTipoArchivo == 2 || $favorito->archivo->tipoArchivo->idTipoArchivo == 4)
+                                                        <td><i class="fa-solid fa-file-image"
+                                                                style="margin-right: 4%"></i>{{ $favorito->archivo->nombre }}
+                                                        </td>
+                                                    @else
+                                                        @if ($favorito->archivo->tipoArchivo->idTipoArchivo == 3)
+                                                            <td><i class="fa-solid fa-file-word"
+                                                                    style="margin-right: 4%"></i>{{ $favorito->archivo->nombre }}
+                                                            </td>
+                                                        @else
+                                                            @if ($favorito->archivo->tipoArchivo->idTipoArchivo == 5)
+                                                                <td><i class="fa-solid fa-file-file"
+                                                                        style="margin-right: 4%"></i>{{ $favorito->archivo->nombre }}
+                                                                </td>
+                                                            @else
+                                                                @if ($favorito->archivo->tipoArchivo->idTipoArchivo == 6)
+                                                                    <td><i class="fa-solid fa-file-audio"
+                                                                            style="margin-right: 4%"></i>{{ $favorito->archivo->nombre }}
+                                                                    </td>
+                                                                @else
+                                                                    @if ($favorito->archivo->tipoArchivo->idTipoArchivo == 7)
+                                                                        <td><i class="fa-solid fa-file-video"
+                                                                                style="margin-right: 4%"></i>{{ $favorito->archivo->nombre }}
+                                                                        </td>
+                                                                    @else
+                                                                        <td><i class="fa-solid fa-file-lines"
+                                                                                style="margin-right: 4%"></i>{{ $favorito->archivo->nombre }}
+                                                                        </td>
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                                <td>{{ (new DateTime($favorito->archivo->fechaCreacion))->format('d/m/y') }}
+                                                </td>
+                                                <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
+                                                    {{ $favorito->archivo->usuario->nombre }}</td>
+                                                @if ($favorito->archivo->carpeta != null)
+                                                    <td>
+                                                        <i class="fa-regular fa-folder" style="margin-right: 4%"></i>
+                                                        {{ $favorito->archivo->carpeta->nombreCarpeta }}
+                                                    </td>
+                                                @else
+                                                    <td>
+                                                        <i class="fa-regular fa-folder" style="margin-right: 4%"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalDetallesArchivo"
+                                                            data-idArchivoDetalles="{{ $favorito->archivo->idArchivo }}"
+                                                            data-nombre="{{ $favorito->archivo->nombre }}"
+                                                            data-descripcion="{{ $favorito->archivo->descripcion }}"></i>
+                                                        {{ $favorito->archivo->carpeta }}
+                                                    </td>
+                                                @endif
+                                                <th><i class="fa-solid fa-user-plus"></i>
+                                                    <i data-bs-toggle="modal" data-bs-target="#editarArchivo"
+                                                        data-bs-whatever="@editarArchivo"
+                                                        data-idEdit="{{ $favorito->archivo->idArchivo }}"
+                                                        data-nombreEdit="{{ $favorito->archivo->nombre }}"
+                                                        data-descripcionEdit="{{ $favorito->archivo->descripcion }}"
+                                                        data-tipoEdit="{{ $favorito->archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-fechaEdit="{{ (new DateTime($favorito->archivo->fechaCreacion))->format('d/m/y') }}"
+                                                        data-usuarioEdit="yo" class="fa-solid fa-pen-to-square"></i>
+                                                    <i class="fa-regular fa-star" style="color: gold"></i>
+                                                    <i class="fa-solid fa-trash" data-bs-toggle="modal"
+                                                        data-bs-target="#moverPapelera"
+                                                        data-bs-whatever="@moverPapelera"
+                                                        data-archivoPapeleraId="{{ $favorito->archivo->idArchivo }}"
+                                                        data-archivoPapeleraNombre="{{ $favorito->archivo->nombre }}"
+                                                        data-archivoPapeleraDescripcion="{{ $favorito->archivo->descripcion }}"
+                                                        data-archivoPapeleraTipo="{{ $favorito->archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-carpetaPapelera="{{ $favorito->archivo->carpeta ? $favorito->archivo->carpeta->nombreCarpeta : '' }}"></i>
+                                                </th>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                </tbody>
                             </table>
-                            <table id="tablaPapelera" style="display: none;" class="table table-striped table-hover mt-4">
+
+                            <!--Tabla Papelera-->
+                            <table id="tablaPapelera" style="display: none;"
+                                class="table table-striped table-hover mt-4">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th style="display: none">#Categoria</th>
+                                        <th>Nombre</th>
+                                        <th>Motivo Sugerido</th>
+                                        <th>Propietario</th>
+                                        <th>Ubicacion</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($archivos as $archivo)
+                                        @if ($archivo->estadoArchivo->idEstado == 2)
+                                            <tr data-idArchivo="{{ $archivo->idArchivo }}">
+                                                <td style="display: none"></td>
+                                            <tr data-tipo="{{ $archivo->tipoArchivo->idTipoArchivo }}">
+                                                <td style="display: none"></td>
+                                                @if ($archivo->tipoArchivo->idTipoArchivo == 1)
+                                                    <td><i class="fa-solid fa-file-pdf"
+                                                            style="margin-right: 4%"></i>{{ $archivo->nombre }}</td>
+                                                @else
+                                                    @if ($archivo->tipoArchivo->idTipoArchivo == 2 || $archivo->tipoArchivo->idTipoArchivo == 4)
+                                                        <td><i class="fa-solid fa-file-image"
+                                                                style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                        </td>
+                                                    @else
+                                                        @if ($archivo->tipoArchivo->idTipoArchivo == 3)
+                                                            <td><i class="fa-solid fa-file-word"
+                                                                    style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                            </td>
+                                                        @else
+                                                            @if ($archivo->tipoArchivo->idTipoArchivo == 5)
+                                                                <td><i class="fa-solid fa-file-file"
+                                                                        style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                </td>
+                                                            @else
+                                                                @if ($archivo->tipoArchivo->idTipoArchivo == 6)
+                                                                    <td><i class="fa-solid fa-file-audio"
+                                                                            style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                    </td>
+                                                                @else
+                                                                    @if ($archivo->tipoArchivo->idTipoArchivo == 7)
+                                                                        <td><i class="fa-solid fa-file-video"
+                                                                                style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                        </td>
+                                                                    @else
+                                                                        <td><i class="fa-solid fa-file-lines"
+                                                                                style="margin-right: 4%"></i>{{ $archivo->nombre }}
+                                                                        </td>
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                                <td>{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}
+                                                </td>
+                                                <td><i class="fa-solid fa-user" style="margin-right: 4%"></i>
+                                                    {{ $archivo->usuario->nombre }}</td>
+                                                @if ($archivo->carpeta != null)
+                                                    <td>
+                                                        <i class="fa-regular fa-folder" style="margin-right: 4%"></i>
+                                                        {{ $archivo->carpeta->nombreCarpeta }}
+                                                    </td>
+                                                @else
+                                                    <td>
+                                                        <i class="fa-regular fa-folder" style="margin-right: 4%"></i>
+                                                        {{ $archivo->carpeta }}
+                                                    </td>
+                                                @endif
+                                                <th>
+                                                    <i data-bs-toggle="modal" data-bs-target="#editarArchivo"
+                                                        data-bs-whatever="@editarArchivo"
+                                                        data-idEdit="{{ $archivo->idArchivo }}"
+                                                        data-nombreEdit="{{ $archivo->nombre }}"
+                                                        data-descripcionEdit="{{ $archivo->descripcion }}"
+                                                        data-tipoEdit="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-fechaEdit="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                        data-usuarioEdit="yo" class="fa-solid fa-pen-to-square"></i>
+                                                    <i class="fa-solid fa-trash" data-bs-toggle="modal"
+                                                        data-bs-target="#eliminar" data-bs-whatever="@eliminar"
+                                                        data-idEliminar="{{ $archivo->idArchivo }}"
+                                                        data-nombreEliminar="{{ $archivo->nombre }}"
+                                                        data-tipoEliminar="{{ $archivo->tipoArchivo->tipoArchivo }}"
+                                                        data-fechaEliminar="{{ (new DateTime($archivo->fechaCreacion))->format('d/m/y') }}"
+                                                        data-usuarioEliminar="{{ $archivo->usuario->nombre }}"
+                                                        data-carpetaEliminar="{{ $archivo->carpeta ? $archivo->carpeta->nombreCarpeta : '' }}"></i>
+                                                </th>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -330,7 +598,8 @@
                             <label for="tipoarchivo" class="form-label">Tipo de Archivo:</label>
                             <select class="form-select" id="tipoarchivo" name="tipoarchivo" required>
                                 @foreach ($tiposArchivos as $tipoArchivo)
-                                    <option value="{{ $tipoArchivo->idTipoArchivo }}">{{ $tipoArchivo->tipoArchivo }}
+                                    <option value="{{ $tipoArchivo->idTipoArchivo }}">
+                                        {{ $tipoArchivo->tipoArchivo }}
                                     </option>
                                 @endforeach
                             </select>
@@ -401,7 +670,8 @@
                                 <option value="{{ Session::get('cuentaAct')['preferencia']['idPreferencia'] }}">
                                     Seleccionar</option>
                                 @foreach ($preferencias as $preferencia)
-                                    <option value="{{ $preferencia->idPreferencia }}">{{ $preferencia->preferencia }}
+                                    <option value="{{ $preferencia->idPreferencia }}">
+                                        {{ $preferencia->preferencia }}
                                     </option>
                                 @endforeach
                             </select>
@@ -417,6 +687,8 @@
                                 placeholder="img/nombre.extension">
                         </div>
                         <div class="modal-footer">
+                            <button type="button" class="btn btn-light" onclick="cerrarSesion()">Cerrar
+                                Sesion</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
@@ -477,6 +749,53 @@
             </div>
         </div>
     </div>
+    <!--Mover a papelera-->
+    <div class="modal fade" id="moverPapelera" tabindex="-1" aria-labelledby="moverPapeleraLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="moverPapeleraLabel">Detalles del Archivo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('papelera') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3" style="display: none">
+                            <label for="archivoPapeleraId" class="col-form-label">ID:</label>
+                            <input type="text" class="form-control" id="archivoPapeleraId"
+                                name="archivoPapeleraId" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoPapeleraNombre" class="col-form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="archivoPapeleraNombre"
+                                name="archivoPapeleraNombre" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="archivoPapeleraDescripcion" class="col-form-label">Descripcion:</label>
+                            <input type="text" class="form-control" id="archivoPapeleraDescripcion"
+                                name="archivoPapeleraDescripcion" readonly>
+                        </div>
+                        <div class="mb-3" style="display: none">
+                            <label for="archivoPapeleraTipo" class="col-form-label">Tipo:</label>
+                            <input type="text" class="form-control" id="archivoPapeleraTipo"
+                                name="archivoPapeleraTipo" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="carpetaPapelera" class="col-form-label">Carpeta:</label>
+                            <input type="text" class="form-control" id="carpetaPapelera" name="carpetaPapelera"
+                                readonly>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Eliminar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
     <!--Modal Favoritos-->
     <div class="modal fade" id="favorito" tabindex="-1" aria-labelledby="favoritoLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -486,7 +805,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form action="{{ route('agregar-favorito') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="archivoFavId" class="col-form-label"></label>
+                            <input type="text" class="form-control" id="archivoFavId" name="archivoFavId"
+                                readonly>
+                        </div>
                         <div class="mb-3">
                             <label for="archivoFavNombre" class="col-form-label">Nombre:</label>
                             <input type="text" class="form-control" id="archivoFavNombre" readonly>
@@ -516,6 +841,49 @@
             </div>
         </div>
     </div>
+    <!--Modal eliminar-->
+    <div class="modal fade" id="eliminar" tabindex="-1" aria-labelledby="eliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="eliminarLabel">Detalles del Archivo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-delete" action="{{ route('eliminar-archivo') }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" id="idEliminar" name="idEliminar">
+                        <div class="mb-3">
+                            <label for="nombreEliminar" class="col-form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreEliminar" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipoEliminar" class="col-form-label">Tipo:</label>
+                            <input type="text" class="form-control" id="tipoEliminar" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaEliminar" class="col-form-label">Fecha de Creación:</label>
+                            <input type="text" class="form-control" id="fechaEliminar" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuarioEliminar" class="col-form-label">Usuario:</label>
+                            <input type="text" class="form-control" id="usuarioEliminar" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="carpetaEliminar" class="col-form-label">Carpeta:</label>
+                            <input type="text" class="form-control" id="carpetaEliminar" readonly>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('¿Estás seguro de eliminar este elemento?')">Eliminar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
     <!--Modal Carpetas-->
     <div class="modal fade" id="modalCarpeta" tabindex="-1" role="dialog" aria-labelledby="modalCarpetaLabel"
         aria-hidden="true">
@@ -530,7 +898,40 @@
                         @csrf
                         <div class="mb-3">
                             <label for="nombreCarpeta" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control" id="nombreCarpeta" name="nombreCarpeta" required>
+                            <input type="text" class="form-control" id="nombreCarpeta" name="nombreCarpeta"
+                                required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal Computadora-->
+    <div class="modal fade" id="modalComputadora" tabindex="-1" role="dialog"
+        aria-labelledby="modalComputadoraLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalComputadoraLabel">Agregar Computadora</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-computadora" action="{{ route('guardar-computadora') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="usuarioComputadora" class="form-label"></label>
+                            <input type="text" class="form-control" id="usuarioComputadora"
+                                name="usuarioComputadora" hidden
+                                value="{{ Session::get('cuentaAct')['idUsuario'] }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreComputadora" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombreComputadora"
+                                name="nombreComputadora" required>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -556,7 +957,8 @@
                         @method('PUT')
                         <div class="mb-3">
                             <label for="idDetalleArchivo" class="form-label">ID:</label>
-                            <input type="text" class="form-control" id="idDetalleArchivo" name="idDetalleArchivo" readonly>
+                            <input type="text" class="form-control" id="idDetalleArchivo" name="idDetalleArchivo"
+                                readonly>
                         </div>
                         <div class="mb-3">
                             <label for="nombreDetalleArchivo" class="form-label">Nombre:</label>

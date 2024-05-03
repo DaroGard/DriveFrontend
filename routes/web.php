@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/index', function () {
     return view('index');
 });
 
@@ -41,3 +41,11 @@ Route::put('/archivos/actualizar/', [MainController::class, 'actualizarArchivo']
 Route::post('/guardar-carpeta', [MainController::class, 'guardarCarpeta'])->name('guardar-carpeta');
 
 Route::put('/carpeta/agregar/', [MainController::class, 'agregarArchivoCarpeta'])->name('carpeta-archivo');
+
+Route::put('/archivos/eliminar/', [MainController::class, 'moverPapeleraArchivo'])->name('papelera');
+
+Route::delete('/eliminar-archivo', [MainController::class, 'eliminarArchivo'])->name('eliminar-archivo');
+
+Route::post('/guardar-computadora', [MainController::class, 'guardarComputadora'])->name('guardar-computadora');
+
+Route::post('/agregar-favorito', [MainController::class, 'agregarFavorito'])->name('agregar-favorito');

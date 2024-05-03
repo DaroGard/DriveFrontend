@@ -17,6 +17,7 @@ class MainController extends Controller
             'verify' => false,
         ]);
 
+
         $idUsuario = Session::get('cuentaAct')['idUsuario'];
         $url = '/drive/archivos/usuario/' . $idUsuario;
 
@@ -27,6 +28,8 @@ class MainController extends Controller
         $responseLugar = $client->request('GET', 'drive/lugares/todos');
         $responsePreferencia = $client->request('GET', 'drive/usuarios/preferencia/todas');
         $responseCarpeta = $client->request('GET', '/drive/carpetas/todas');
+        $responseComputadora = $client->request('GET', '/drive/computadoras/todas');
+        $responseFavorito = $client->request('GET', "/drive/archivos/favoritos/todos");
 
         $tiposArchivos = json_decode($responseTipoArchivo->getBody()->getContents());
         $usuarios = json_decode($responseUsuarios->getBody()->getContents());
@@ -35,8 +38,22 @@ class MainController extends Controller
         $lugares = json_decode($responseLugar->getBody()->getContents());
         $preferencias = json_decode(($responsePreferencia->getBody()->getContents()));
         $carpetas = json_decode(($responseCarpeta->getBody()->getContents()));
+        $computadoras = json_decode(($responseComputadora->getBody()->getContents()));
+        $favoritos = json_decode(($responseFavorito->getBody()->getContents()));
 
-        return view('main', compact('tiposArchivos', 'usuarios', 'archivos', 'generos', 'lugares', 'preferencias', 'carpetas'));
+        $totalTamano = 0;
+        foreach ($archivos as $archivo) {
+            if (
+                $archivo->usuario->idUsuario == Session::get('cuentaAct')['idUsuario']
+            ) {
+                $totalTamano += $archivo->tamano;
+            }
+        }
+        $maximo = 15000;
+        $porcentaje = min((100 * $totalTamano) / $maximo, 100);
+
+        return view('main', compact('tiposArchivos', 'usuarios', 'archivos', 'generos', 'lugares',
+        'preferencias', 'carpetas', 'totalTamano', 'maximo', 'porcentaje', 'computadoras', 'favoritos'));
     }
 
     public function guardarArchivo(Request $request)
@@ -121,7 +138,6 @@ class MainController extends Controller
             ]);
 
             return redirect()->route('main-page');
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage()
@@ -151,7 +167,7 @@ class MainController extends Controller
         ];
 
         try {
-            $response = $client->request('PUT', 'drive/archivos/actualizar/'. $idArchivo, [
+            $response = $client->request('PUT', 'drive/archivos/actualizar/' . $idArchivo, [
                 'json' => $data,
             ]);
 
@@ -208,7 +224,7 @@ class MainController extends Controller
         ];
 
         try {
-            $response = $client->request('PUT', 'drive/carpetas/actualizar/'. $idCarpeta, [
+            $response = $client->request('PUT', 'drive/carpetas/actualizar/' . $idCarpeta, [
                 'json' => $data,
             ]);
 
@@ -226,5 +242,133 @@ class MainController extends Controller
         }
     }
 
+    public function eliminarArchivo(Request $request)
+    {
+        $idArchivo = $request->input('idEliminar');
 
+        $client = new Client([
+            'base_uri' => 'http://localhost:8080/',
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        try {
+            $response = $client->delete('drive/archivos/eliminar/' .  $idArchivo);
+
+
+            if ($response->getStatusCode() === 200) {
+                return redirect()->route('main-page');
+            } else {
+
+                return response()->json([
+                    'error' => 'Error al eliminar',
+                ], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function moverPapeleraArchivo(Request $request)
+    {
+
+        $idArchivo = $request->input('archivoPapeleraId');
+
+        $client = new Client([
+            'base_uri' => 'http://localhost:8080/',
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+
+
+        $data = [
+            'estadoArchivo' => [
+                'idEstado' => 2,
+            ],
+        ];
+
+        try {
+            $response = $client->request('PUT', 'drive/archivos/actualizar/' . $idArchivo, [
+                'json' => $data,
+            ]);
+
+            if ($response->getStatusCode() === 200) {
+                return redirect()->route('main-page');
+            } else {
+                return response()->json([
+                    'error' => 'Error al actualizar el archivo',
+                ], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function guardarComputadora(Request $request)
+    {
+        $request->validate([
+            'usuarioComputadora' => 'required|integer',
+            'nombreComputadora' => 'required|string',
+        ]);
+
+        $client = new Client();
+
+        $id = $request->input('usuarioComputadora');
+        $nombre = $request->input('nombreComputadora');
+
+        $body = [
+            'nombreComputadora' => $nombre,
+            'usuario' => [
+                'idUsuario' => $id,
+            ],
+        ];
+
+        try {
+            $response = $client->post('http://localhost:8080/drive/computadoras/crear', [
+                'json' => $body
+            ]);
+
+        
+            if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
+            
+                return redirect()->route('main-page');
+            } else {
+                return back()->with('error', 'Error al crear la computadora');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al conectar con el servidor');
+        }
+    }
+
+    public function agregarFavorito(Request $request)
+    {
+        $client = new Client();
+
+        $idUsuario = Session::get('cuentaAct')['idUsuario'];
+        $idArchivo = $request->input('archivoFavId');
+
+        $body = [
+            'usuario' => [
+                'idUsuario' => $idUsuario
+            ],
+            'archivo' => [
+                'idArchivo' => $idArchivo
+            ]
+        ];
+
+        $response = $client->post('http://localhost:8080/drive/archivos/favoritos/agregar', [
+            'json' => $body
+        ]);
+
+        return redirect()->route('main-page');
+    }
 }

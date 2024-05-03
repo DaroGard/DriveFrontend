@@ -24,6 +24,10 @@ $(document).ready(function(){
 });
 
 
+function cerrarSesion() {
+    window.location.href = 'index';
+}
+
 function filtrarPorTipo(idTipoArchivo) {
     var filas = document.querySelectorAll('#tablaArchivos tbody tr');
     filas.forEach(function(fila) {
@@ -46,8 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var tipo = button.getAttribute('data-tipoEdit');
         var fecha = button.getAttribute('data-fechaEdit');
         var carpeta = button.getAttribute('data-carpetaEdit');
-        
-        console.log(id);
 
         modal.querySelector('#archivoEditId').value = id;
         modal.querySelector('#archivoEditDescripcion').value = descripcion;
@@ -59,15 +61,36 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById('moverPapelera');
+    modal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-archivoPapeleraId');
+        var nombre = button.getAttribute('data-archivoPapeleraNombre');
+        var descripcion = button.getAttribute('data-archivoPapeleraDescripcion');
+        var tipo = button.getAttribute('data-archivoPapeleraTipo');
+        var carpeta = button.getAttribute('data-carpetaPapelera');
+
+        modal.querySelector('#archivoPapeleraId').value = id;
+        modal.querySelector('#archivoPapeleraNombre').value = descripcion;
+        modal.querySelector('#archivoPapeleraDescripcion').value = nombre;
+        modal.querySelector('#archivoPapeleraTipo').value = tipo;
+        modal.querySelector('#carpetaPapelera').value = carpeta;
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('favorito');
     modal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
         var nombre = button.getAttribute('data-nombre');
         var tipo = button.getAttribute('data-tipo');
         var fecha = button.getAttribute('data-fecha');
         var usuario = button.getAttribute('data-usuario');
         var carpeta = button.getAttribute('data-carpeta');
 
+        modal.querySelector('#archivoFavId').value = id;
         modal.querySelector('#archivoFavNombre').value = nombre;
         modal.querySelector('#archivoFavTipo').value = tipo;
         modal.querySelector('#archivoFavFecha').value = fecha;
@@ -76,11 +99,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById('eliminar');
+    modal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-idEliminar');
+        var nombre = button.getAttribute('data-nombreEliminar');
+        var tipo = button.getAttribute('data-tipoEliminar');
+        var fecha = button.getAttribute('data-fechaEliminar');
+        var usuario = button.getAttribute('data-usuarioEliminar');
+        var carpeta = button.getAttribute('data-carpetaEliminar');
+
+        modal.querySelector('#idEliminar').value = id;
+        modal.querySelector('#nombreEliminar').value = nombre;
+        modal.querySelector('#tipoEliminar').value = tipo;
+        modal.querySelector('#fechaEliminar').value = fecha;
+        modal.querySelector('#usuarioEliminar').value = usuario;
+        modal.querySelector('#carpetaEliminar').value = carpeta;
+    });
+});
+
 
 const btnArchivo = document.getElementById('btnradio1');
 const btnCarpeta = document.getElementById('btnradio2');
 
 const tablaArchivos = document.getElementById('tablaArchivos');
+const tablaArchivosFiltrados = document.getElementById('tablaArchivosFiltrados');
+const tablaComputadoras = document.getElementById('tablaComputadoras');
+const tablaCompartidos = document.getElementById('tablaCompartidos');
+const tablaDestacados = document.getElementById('tablaDestacados');
+const tablaPapelera = document.getElementById('tablaPapelera');
 const tablaCarpetas = document.getElementById('tablaCarpetas');
 
 const iconosCarpeta = document.querySelectorAll('#tablaArchivos tbody tr td:first-child i.fa-solid.fa-folder');
@@ -89,6 +137,11 @@ function toggleTabla() {
     if (btnArchivo.checked) {
         tablaArchivos.style.display = 'table';
         tablaCarpetas.style.display = 'none';
+        tablaComputadoras.style.display = "none";
+        tablaCompartidos.style.display = "none";
+        tablaDestacados.style.display = "none";
+        tablaPapelera.style.display = "none";
+        tablaCarpetas.style.display = "none";
 
         const filasArchivos = document.querySelectorAll('#tablaArchivos tbody tr');
         filasArchivos.forEach((fila) => {
@@ -96,29 +149,12 @@ function toggleTabla() {
         });
     } else {
         tablaArchivos.style.display = 'none';
+        tablaPapelera.style.display = "none";
         tablaCarpetas.style.display = 'table';
+        
     }
 }
 
-function filtrarPorCarpeta(idCarpeta) {
-    tablaArchivos.style.display = 'table';
-    tablaCarpetas.style.display = 'none';
-
-    const filas = document.querySelectorAll('#tablaArchivos tbody tr');
-    filas.forEach((fila) => {
-        const idCarpetaArchivo = fila.getAttribute('data-idArchivo');
-        console.log('idCarpetaArchivo:', idCarpetaArchivo);
-        console.log('idCarpeta:', idCarpeta);
-
-        if (idCarpetaArchivo !== idCarpeta.toString()) {
-            console.log('Ocultando fila:', fila);
-            fila.style.display = 'none';
-        } else {
-            console.log('Mostrando fila:', fila);
-            fila.style.display = 'table-row';
-        }
-    });
-}
 
 btnArchivo.addEventListener('change', toggleTabla);
 btnCarpeta.addEventListener('change', toggleTabla);
@@ -139,6 +175,10 @@ document.getElementById("nuevaCarpeta").addEventListener("click", function() {
     $('#modalCarpeta').modal('show');
 });
 
+document.getElementById("nuevaComputadora").addEventListener("click", function() {
+    $('#modalComputadora').modal('show');
+});
+
 
 document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('modalDetallesArchivo');
@@ -154,5 +194,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 });
-
-
