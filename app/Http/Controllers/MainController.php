@@ -98,16 +98,16 @@ class MainController extends Controller
             'nombre' => Session::get('cuentaAct')['nombre'],
             'apellido' => Session::get('cuentaAct')['apellido'],
             'contrasena' => Session::get('cuentaAct')['contrasena'],
-            'imagen' => Session::get('cuentaAct')['imagen'],
+            'imagen' => Session::get('cuentaAct')['imagen'] ?? '',
             'telefono' => Session::get('cuentaAct')['telefono'],
             'genero' => [
-                'idGenero' => Session::get('cuentaAct')['genero']['idGenero']
+                'idGenero' => Session::get('cuentaAct')['genero']['idGenero'] ?? ''
             ],
             'lugar' => [
-                'idLugar' => Session::get('cuentaAct')['lugar']['idLugar']
+                'idLugar' => Session::get('cuentaAct')['lugar']['idLugar'] ?? ''
             ],
             'preferencia' => [
-                'idPreferencia' => Session::get('cuentaAct')['preferencia']['idPreferencia']
+                'idPreferencia' => Session::get('cuentaAct')['preferencia']['idPreferencia'] ?? ''
             ]
         ];
 

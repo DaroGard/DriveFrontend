@@ -647,8 +647,7 @@
                         <div class="mb-3">
                             <label for="genero">Género:</label>
                             <select class="form-control" id="genero" name="genero" required>
-                                <option value="{{ Session::get('cuentaAct')['genero']['idGenero'] }}">Seleccionar
-                                </option>
+                                <option value="{{ Session::get('cuentaAct')['genero']['idGenero'] ?? '' }}">Seleccionar</option>
                                 @foreach ($generos as $genero)
                                     <option value="{{ $genero->idGenero }}">{{ $genero->tipoGenero }}</option>
                                 @endforeach
@@ -657,8 +656,7 @@
                         <div class="mb-3">
                             <label for="lugar">Lugar:</label>
                             <select class="form-control" id="lugar" name="lugar" required>
-                                <option value="{{ Session::get('cuentaAct')['lugar']['idLugar'] }}">Seleccionar
-                                </option>
+                                <option value="{{ Session::get('cuentaAct')['lugar']['idLugar'] ?? '' }}">Seleccionar</option>
                                 @foreach ($lugares as $lugar)
                                     <option value="{{ $lugar->idLugar }}">{{ $lugar->nombreLugar }}</option>
                                 @endforeach
@@ -667,8 +665,9 @@
                         <div class="mb-3">
                             <label for="preferencia">Preferencia:</label>
                             <select class="form-control" id="preferencia" name="preferencia" required>
-                                <option value="{{ Session::get('cuentaAct')['preferencia']['idPreferencia'] }}">
-                                    Seleccionar</option>
+                                <option value="{{ Session::get('cuentaAct')['preferencia']['idPreferencia'] ?? '' }}">
+                                    Seleccionar
+                                </option>
                                 @foreach ($preferencias as $preferencia)
                                     <option value="{{ $preferencia->idPreferencia }}">
                                         {{ $preferencia->preferencia }}
